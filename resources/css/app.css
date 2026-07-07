@@ -1,0 +1,874 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+        @apply min-h-screen bg-slate-50 font-sans text-pusaka-ink antialiased;
+        letter-spacing: 0;
+    }
+
+    a {
+        @apply text-pusaka-teal-dark transition-colors;
+    }
+
+    a:hover {
+        @apply text-pusaka-navy;
+    }
+
+    button,
+    [role="button"] {
+        @apply cursor-pointer;
+    }
+
+    .lucide {
+        width: 1em;
+        height: 1em;
+        flex: 0 0 auto;
+        stroke-width: 2;
+    }
+}
+
+@layer components {
+    .container {
+        @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+    }
+
+    .topbar {
+        @apply sticky top-0 z-40 border-b-[3px] border-pusaka-gold bg-pusaka-navy shadow-lg;
+    }
+
+    .public-navbar {
+        @apply min-h-[74px];
+    }
+
+    .public-navbar > .container {
+        @apply flex min-h-[74px] flex-wrap items-center justify-between gap-4;
+    }
+
+    .navbar-shell {
+        @apply flex min-h-[74px] items-center justify-between gap-4;
+    }
+
+    .navbar-brand {
+        @apply flex min-w-0 items-center gap-2 text-white no-underline;
+    }
+
+    .brand-mark,
+    .admin-brand-mark {
+        @apply grid h-[42px] w-[42px] shrink-0 place-items-center rounded-[7px] bg-pusaka-gold font-extrabold text-slate-900;
+    }
+
+    .brand-emblem {
+        @apply relative grid h-14 w-14 shrink-0 place-items-center rounded-md border-2 border-pusaka-navy bg-white text-3xl text-pusaka-navy;
+    }
+
+    .brand-emblem::before {
+        @apply absolute -right-1 -top-1 h-4 w-4 rounded-sm border-2 border-pusaka-gold content-[''];
+    }
+
+    .brand-emblem-footer {
+        @apply h-11 w-11 border-white bg-transparent text-2xl text-white;
+    }
+
+    .brand-logo {
+        @apply h-11 w-11 shrink-0 rounded-md bg-white object-contain p-[3px];
+    }
+
+    .brand-copy {
+        @apply min-w-0;
+    }
+
+    .brand-copy small {
+        @apply block max-w-[280px] truncate text-xs text-white/60;
+    }
+
+    .navbar-toggler {
+        @apply inline-grid h-10 w-10 place-items-center rounded-md border border-white/30 text-white xl:hidden;
+    }
+
+    .navbar-toggler:hover {
+        @apply bg-white/10;
+    }
+
+    .navbar-toggler-icon,
+    .navbar-toggler-icon::before,
+    .navbar-toggler-icon::after {
+        @apply block h-0.5 w-5 bg-white content-[''];
+    }
+
+    .navbar-toggler-icon {
+        @apply relative;
+    }
+
+    .navbar-toggler-icon::before {
+        @apply absolute -top-1.5 left-0;
+    }
+
+    .navbar-toggler-icon::after {
+        @apply absolute left-0 top-1.5;
+    }
+
+    .navbar-collapse {
+        @apply hidden w-full pb-4 xl:block xl:w-auto xl:pb-0;
+    }
+
+    .navbar-collapse.show {
+        @apply block;
+    }
+
+    .navbar-nav {
+        @apply flex flex-col gap-1 xl:flex-row xl:items-center;
+    }
+
+    .nav-link {
+        @apply flex items-center rounded-md px-3 py-2 text-sm font-medium text-white/75 no-underline hover:bg-white/10 hover:text-white;
+    }
+
+    .public-navbar .nav-link.active {
+        @apply bg-white/10 text-white xl:shadow-[inset_0_-2px_0_#d3a72f];
+    }
+
+    .dropdown {
+        @apply relative;
+    }
+
+    .dropdown-toggle::after {
+        @apply ml-1 inline-block h-2 w-2 -translate-y-0.5 rotate-45 border-b border-r border-current content-[''];
+    }
+
+    .dropdown-menu {
+        @apply z-50 mt-1 hidden min-w-56 overflow-hidden rounded-[7px] border border-pusaka-line bg-white py-1 shadow-elevated xl:absolute xl:right-0;
+    }
+
+    .dropdown-menu.show {
+        @apply block;
+    }
+
+    .dropdown-item {
+        @apply flex w-full items-center px-4 py-2.5 text-sm text-slate-700 no-underline hover:bg-pusaka-soft hover:text-pusaka-navy;
+    }
+
+    .dropdown-divider {
+        @apply my-1 border-0 border-t border-slate-200;
+    }
+
+    .hero {
+        @apply relative isolate flex min-h-[480px] items-center overflow-hidden bg-cover bg-center text-white;
+        background-image: url("https://images.unsplash.com/photo-1589391886645-d51941baf7fb?auto=format&fit=crop&w=1800&q=85");
+    }
+
+    .hero::before {
+        @apply absolute inset-0 -z-10 content-[''];
+        background: rgba(9, 45, 59, .84);
+    }
+
+    .hero-eyebrow,
+    .section-eyebrow {
+        @apply text-xs font-bold uppercase text-pusaka-gold;
+        letter-spacing: 0;
+    }
+
+    .hero-title {
+        @apply max-w-3xl text-[2.35rem] font-bold leading-none sm:text-5xl lg:text-[4.25rem];
+    }
+
+    .hero-copy {
+        @apply max-w-3xl text-white/80;
+    }
+
+    .hero-search {
+        @apply max-w-4xl rounded-lg border border-white/30 bg-white p-2 shadow-2xl;
+    }
+
+    .hero-search .input-group {
+        @apply flex-col gap-2 sm:flex-row sm:gap-0;
+    }
+
+    .hero-search .input-group-text {
+        @apply hidden sm:inline-flex;
+    }
+
+    .hero-search .form-control {
+        @apply rounded-md sm:rounded-l-none sm:rounded-r-none;
+    }
+
+    .page-intro,
+    .section-band {
+        @apply border-y border-pusaka-line bg-white;
+    }
+
+    .stat-tile,
+    .item-card,
+    .metric,
+    .content-card {
+        @apply rounded-lg border border-pusaka-line bg-white shadow-panel;
+    }
+
+    .item-card {
+        @apply transition duration-150 hover:-translate-y-0.5 hover:border-teal-200 hover:shadow-lg;
+    }
+
+    .metric {
+        @apply relative min-h-28 overflow-hidden border-l-4 border-l-pusaka-teal;
+    }
+
+    .metric-icon {
+        @apply inline-grid h-10 w-10 shrink-0 place-items-center rounded-md bg-teal-50 text-pusaka-teal-dark;
+    }
+
+    .btn {
+        @apply inline-flex min-h-10 items-center justify-center gap-1.5 rounded-md border px-4 py-2 text-sm font-semibold no-underline transition focus:outline-none focus:ring-2 focus:ring-pusaka-teal/25 disabled:cursor-not-allowed disabled:opacity-60;
+    }
+
+    .btn-sm {
+        @apply min-h-8 px-3 py-1.5 text-xs;
+    }
+
+    .btn-icon {
+        @apply h-10 w-10 p-0;
+    }
+
+    .btn-pusaka,
+    .btn-primary {
+        @apply border-pusaka-teal bg-pusaka-teal text-white hover:border-pusaka-teal-dark hover:bg-pusaka-teal-dark hover:text-white;
+    }
+
+    .btn-warning {
+        @apply border-pusaka-gold bg-pusaka-gold text-slate-900 hover:border-amber-500 hover:bg-amber-500 hover:text-slate-900;
+    }
+
+    .btn-login {
+        @apply border-pusaka-navy bg-pusaka-navy px-5 text-white shadow-md shadow-slate-900/10 hover:border-pusaka-deep hover:bg-pusaka-deep hover:text-white;
+    }
+
+    .btn-danger {
+        @apply border-red-700 bg-red-700 text-white hover:bg-red-800 hover:text-white;
+    }
+
+    .btn-outline-primary {
+        @apply border-pusaka-teal text-pusaka-teal-dark hover:bg-pusaka-teal hover:text-white;
+    }
+
+    .btn-outline-secondary {
+        @apply border-slate-300 text-slate-700 hover:bg-slate-100 hover:text-slate-900;
+    }
+
+    .btn-outline-success {
+        @apply border-emerald-600 text-emerald-700 hover:bg-emerald-600 hover:text-white;
+    }
+
+    .btn-outline-danger {
+        @apply border-red-300 text-red-700 hover:bg-red-700 hover:text-white;
+    }
+
+    .btn-outline-light {
+        @apply border-white/50 text-white hover:bg-white hover:text-pusaka-navy;
+    }
+
+    .btn-close {
+        @apply relative h-9 w-9 rounded-md text-transparent hover:bg-slate-100;
+    }
+
+    .btn-close::before,
+    .btn-close::after {
+        @apply absolute left-1/2 top-1/2 h-0.5 w-4 bg-slate-600 content-[''];
+    }
+
+    .btn-close::before {
+        transform: translate(-50%, -50%) rotate(45deg);
+    }
+
+    .btn-close::after {
+        transform: translate(-50%, -50%) rotate(-45deg);
+    }
+
+    .btn-close-white::before,
+    .btn-close-white::after {
+        @apply bg-white;
+    }
+
+    .badge {
+        @apply inline-flex items-center rounded px-2 py-1 text-xs font-semibold;
+    }
+
+    .badge-access {
+        @apply bg-teal-50 text-pusaka-teal-dark;
+    }
+
+    .text-bg-success,
+    .bg-success {
+        @apply bg-emerald-100 text-emerald-800;
+    }
+
+    .text-bg-secondary,
+    .bg-secondary {
+        @apply bg-slate-200 text-slate-700;
+    }
+
+    .text-bg-warning,
+    .bg-warning {
+        @apply bg-amber-100 text-amber-800;
+    }
+
+    .text-bg-danger,
+    .bg-danger {
+        @apply bg-red-100 text-red-800;
+    }
+
+    .text-bg-light,
+    .bg-light {
+        @apply bg-slate-100 text-slate-700;
+    }
+
+    .form-label {
+        @apply mb-1.5 block text-sm font-semibold text-slate-700;
+    }
+
+    .form-control,
+    .form-select {
+        @apply block min-h-10 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-pusaka-teal focus:ring-4 focus:ring-pusaka-teal/10;
+    }
+
+    textarea.form-control {
+        @apply min-h-28;
+    }
+
+    .form-check {
+        @apply flex items-center gap-2;
+    }
+
+    .form-check-input {
+        @apply h-4 w-4 rounded border-slate-300 text-pusaka-teal focus:ring-pusaka-teal/25;
+    }
+
+    .form-switch .form-check-input {
+        @apply h-5 w-9 rounded-full;
+    }
+
+    .form-check-label {
+        @apply text-sm text-slate-700;
+    }
+
+    .form-text {
+        @apply mt-1 block text-xs text-slate-500;
+    }
+
+    .is-invalid {
+        @apply border-red-500 focus:border-red-500 focus:ring-red-500/10;
+    }
+
+    .invalid-feedback {
+        @apply mt-1 block text-xs text-red-600;
+    }
+
+    .input-group {
+        @apply flex w-full flex-wrap items-stretch;
+    }
+
+    .input-group > .form-control {
+        @apply min-w-0 flex-1 rounded-l-none;
+        width: auto;
+    }
+
+    .input-group > .invalid-feedback {
+        @apply w-full;
+    }
+
+    .input-group-text {
+        @apply inline-flex items-center rounded-l-md border border-r-0 border-slate-300 px-3 text-slate-500;
+    }
+
+    .input-group-lg .form-control,
+    .input-group-lg .input-group-text {
+        @apply min-h-14 text-base;
+    }
+
+    .table-responsive {
+        @apply w-full overflow-x-auto;
+    }
+
+    .table {
+        @apply w-full border-collapse text-left text-sm;
+    }
+
+    .table thead th {
+        @apply border-b border-slate-200 px-3 py-3 text-xs font-bold uppercase text-slate-500;
+    }
+
+    .table tbody td {
+        @apply border-b border-slate-100 px-3 py-3 align-middle;
+    }
+
+    .table tbody tr:hover {
+        @apply bg-slate-50;
+    }
+
+    .table-sm thead th,
+    .table-sm tbody td {
+        @apply px-2 py-2;
+    }
+
+    .alert {
+        @apply rounded-lg border px-4 py-3 text-sm;
+    }
+
+    .alert-success {
+        @apply border-emerald-200 bg-emerald-50 text-emerald-800;
+    }
+
+    .alert-danger {
+        @apply border-red-200 bg-red-50 text-red-800;
+    }
+
+    .alert-warning {
+        @apply border-amber-200 bg-amber-50 text-amber-800;
+    }
+
+    .alert-info {
+        @apply border-sky-200 bg-sky-50 text-sky-800;
+    }
+
+    .list-group {
+        @apply divide-y divide-slate-200;
+    }
+
+    .list-group-item {
+        @apply flex bg-white px-4 py-3 text-sm;
+    }
+
+    .list-group-flush .list-group-item {
+        @apply px-0;
+    }
+
+    .list-group-item-action {
+        @apply hover:bg-slate-50;
+    }
+
+    .accordion {
+        @apply space-y-3;
+    }
+
+    .accordion-item {
+        @apply overflow-hidden rounded-lg border border-pusaka-line bg-white;
+    }
+
+    .accordion-button {
+        @apply flex w-full items-center justify-between px-4 py-4 text-left font-semibold text-pusaka-ink hover:bg-pusaka-soft;
+    }
+
+    .accordion-button::after {
+        @apply text-lg content-['+'];
+    }
+
+    .accordion-button:not(.collapsed)::after {
+        @apply content-['-'];
+    }
+
+    .accordion-collapse {
+        @apply hidden;
+    }
+
+    .accordion-collapse.show {
+        @apply block;
+    }
+
+    .accordion-body {
+        @apply border-t border-pusaka-line px-4 py-4 text-sm leading-7 text-slate-600;
+    }
+
+    .nav-tabs {
+        @apply flex flex-wrap gap-1 border-b border-slate-200;
+    }
+
+    .nav-tabs .nav-link {
+        @apply rounded-t-md rounded-b-none px-4 py-2.5 text-slate-500 hover:bg-slate-100 hover:text-pusaka-navy;
+    }
+
+    .nav-tabs .nav-link.active {
+        @apply border-b-2 border-pusaka-teal bg-teal-50 text-pusaka-teal-dark;
+    }
+
+    .tab-pane {
+        @apply hidden;
+    }
+
+    .tab-pane.active.show {
+        @apply block;
+    }
+
+    .progress {
+        @apply overflow-hidden rounded-full bg-slate-200;
+    }
+
+    .progress-bar {
+        @apply h-full rounded-full bg-pusaka-teal;
+    }
+
+    .modal {
+        @apply fixed inset-0 z-[70] hidden items-center justify-center overflow-y-auto bg-slate-950/60 p-4;
+    }
+
+    .modal.show {
+        @apply flex;
+    }
+
+    .modal-dialog {
+        @apply w-full max-w-lg;
+    }
+
+    .modal-content {
+        @apply overflow-hidden rounded-lg bg-white shadow-2xl;
+    }
+
+    .modal-header,
+    .modal-footer {
+        @apply flex items-center justify-between gap-3 border-slate-200 px-5 py-4;
+    }
+
+    .modal-header {
+        @apply border-b;
+    }
+
+    .modal-footer {
+        @apply justify-end border-t;
+    }
+
+    .modal-body {
+        @apply px-5 py-4;
+    }
+
+    .modal-title {
+        @apply text-lg font-bold;
+    }
+
+    .offcanvas {
+        @apply fixed inset-y-0 left-0 z-[70] hidden w-[min(88vw,300px)] overflow-y-auto bg-pusaka-deep text-white shadow-2xl;
+    }
+
+    .offcanvas.show {
+        @apply block;
+    }
+
+    .offcanvas-header {
+        @apply flex items-center justify-between border-b border-white/10 px-4 py-3;
+    }
+
+    .offcanvas-body {
+        @apply p-4;
+    }
+
+    .ui-backdrop {
+        @apply fixed inset-0 z-[60] bg-slate-950/55;
+    }
+
+    .site-footer {
+        @apply mt-12 border-t-[3px] border-pusaka-gold bg-pusaka-deep py-0 text-sm text-white/75;
+    }
+
+    .site-footer a {
+        @apply text-white no-underline hover:text-pusaka-gold;
+    }
+
+    .footer-title {
+        @apply mb-4 font-bold text-pusaka-gold;
+    }
+
+    .footer-main {
+        @apply grid gap-8 py-8 md:grid-cols-2 lg:grid-cols-[1.4fr_.9fr_1fr_1.25fr];
+    }
+
+    .footer-brand p {
+        @apply mt-5 max-w-sm leading-7 text-white/75;
+    }
+
+    .footer-logo {
+        @apply flex items-center gap-3 text-white no-underline;
+    }
+
+    .footer-logo-title {
+        @apply block text-xl font-bold leading-tight;
+    }
+
+    .footer-logo small {
+        @apply block text-xs font-semibold text-pusaka-gold;
+    }
+
+    .footer-links {
+        @apply grid gap-2;
+    }
+
+    .footer-links a {
+        @apply text-white/80 hover:text-pusaka-gold;
+    }
+
+    .footer-contact {
+        @apply grid gap-3;
+    }
+
+    .footer-contact div {
+        @apply flex items-start gap-3 leading-6;
+    }
+
+    .footer-contact .lucide {
+        @apply mt-1 text-pusaka-gold;
+    }
+
+    .footer-bottom {
+        @apply flex flex-col gap-3 border-t border-white/15 py-4 text-xs text-white/70 sm:flex-row sm:items-center sm:justify-between;
+    }
+
+    .footer-bottom-links {
+        @apply flex flex-wrap items-center gap-3;
+    }
+
+    .footer-bottom-links span {
+        @apply h-4 w-px bg-white/30;
+    }
+
+    .auth-section {
+        @apply grid min-h-[calc(100vh-240px)] items-center bg-slate-100 py-12;
+    }
+
+    .auth-card {
+        @apply overflow-hidden;
+    }
+
+    .auth-card-header {
+        @apply border-b border-pusaka-line bg-pusaka-navy text-white;
+    }
+
+    .admin-body {
+        @apply bg-slate-100;
+    }
+
+    .admin-shell {
+        @apply min-h-screen;
+    }
+
+    .admin-sidebar {
+        @apply fixed inset-y-0 left-0 z-40 hidden w-[268px] overflow-y-auto border-r border-white/10 bg-pusaka-deep lg:block;
+    }
+
+    .admin-sidebar-inner {
+        @apply min-h-full p-4;
+    }
+
+    .admin-brand {
+        @apply mb-3 flex min-h-[52px] items-center gap-2 text-white no-underline;
+    }
+
+    .admin-brand-copy {
+        @apply min-w-0;
+    }
+
+    .admin-brand-copy small {
+        @apply block text-xs text-white/50;
+    }
+
+    .admin-nav-label {
+        @apply mb-1 mt-5 px-3 text-[11px] font-bold uppercase text-white/40;
+    }
+
+    .admin-nav {
+        @apply flex flex-col;
+    }
+
+    .admin-nav .nav-link {
+        @apply flex min-h-10 items-center gap-3 rounded-md px-3 py-2 text-sm text-white/70 hover:bg-white/10 hover:text-white;
+    }
+
+    .admin-nav .nav-link i {
+        @apply w-5 text-center text-white/55;
+    }
+
+    .admin-nav .nav-link.active {
+        @apply bg-white/10 text-white shadow-[inset_3px_0_0_#d3a72f];
+    }
+
+    .admin-nav .nav-link.active i {
+        @apply text-pusaka-gold;
+    }
+
+    .admin-main {
+        @apply min-h-screen min-w-0 lg:ml-[268px];
+    }
+
+    .admin-mobile-bar {
+        @apply sticky top-0 z-40 flex min-h-[62px] items-center justify-between border-b-[3px] border-pusaka-gold bg-pusaka-deep px-4 lg:hidden;
+    }
+
+    .admin-content {
+        @apply mx-auto max-w-[1680px] px-4 py-5 sm:px-6 lg:px-7;
+    }
+
+    .admin-page-header {
+        @apply mb-6 flex flex-col items-start justify-between gap-3 border-b border-slate-200 pb-4 sm:flex-row sm:items-center;
+    }
+
+    .admin-page-actions {
+        @apply flex w-full flex-wrap justify-start gap-2 sm:w-auto sm:justify-end;
+    }
+}
+
+@layer utilities {
+    .row {
+        @apply grid grid-cols-12;
+    }
+
+    .g-2 { @apply gap-2; }
+    .g-3 { @apply gap-3; }
+    .g-4 { @apply gap-4; }
+    .g-5 { @apply gap-5; }
+
+    .col-sm-8,
+    .col-sm-6,
+    .col-sm-4,
+    .col-md-10,
+    .col-md-9,
+    .col-md-8,
+    .col-md-7,
+    .col-md-6,
+    .col-md-5,
+    .col-md-4,
+    .col-md-3,
+    .col-md-2,
+    .col-lg-9,
+    .col-lg-8,
+    .col-lg-7,
+    .col-lg-6,
+    .col-lg-5,
+    .col-lg-4,
+    .col-lg-3,
+    .col-lg-2,
+    .col-xl-9,
+    .col-xl-8,
+    .col-xl-7,
+    .col-xl-5,
+    .col-xl-4,
+    .col-xl-3 {
+        @apply col-span-12;
+    }
+
+    .col-12 { @apply col-span-12; }
+    .col-8 { @apply col-span-8; }
+    .col-7 { @apply col-span-7; }
+    .col-6 { @apply col-span-6; }
+    .col-5 { @apply col-span-5; }
+    .col-4 { @apply col-span-4; }
+
+    @screen sm {
+        .col-sm-8 { @apply col-span-8; }
+        .col-sm-6 { @apply col-span-6; }
+        .col-sm-4 { @apply col-span-4; }
+    }
+
+    @screen md {
+        .col-md-10 { @apply col-span-10; }
+        .col-md-9 { @apply col-span-9; }
+        .col-md-8 { @apply col-span-8; }
+        .col-md-7 { @apply col-span-7; }
+        .col-md-6 { @apply col-span-6; }
+        .col-md-5 { @apply col-span-5; }
+        .col-md-4 { @apply col-span-4; }
+        .col-md-3 { @apply col-span-3; }
+        .col-md-2 { @apply col-span-2; }
+    }
+
+    @screen lg {
+        .col-lg-9 { @apply col-span-9; }
+        .col-lg-8 { @apply col-span-8; }
+        .col-lg-7 { @apply col-span-7; }
+        .col-lg-6 { @apply col-span-6; }
+        .col-lg-5 { @apply col-span-5; }
+        .col-lg-4 { @apply col-span-4; }
+        .col-lg-3 { @apply col-span-3; }
+        .col-lg-2 { @apply col-span-2; }
+    }
+
+    @screen xl {
+        .col-xl-9 { @apply col-span-9; }
+        .col-xl-8 { @apply col-span-8; }
+        .col-xl-7 { @apply col-span-7; }
+        .col-xl-5 { @apply col-span-5; }
+        .col-xl-4 { @apply col-span-4; }
+        .col-xl-3 { @apply col-span-3; }
+    }
+
+    .d-flex { @apply flex; }
+    .d-grid { @apply grid; }
+    .d-block { @apply block; }
+    .d-inline { @apply inline; }
+    .flex-column { @apply flex-col; }
+    .flex-grow-1 { @apply flex-1; }
+    .align-items-center { @apply items-center; }
+    .align-items-start { @apply items-start; }
+    .align-items-end { @apply items-end; }
+    .align-self-end { @apply self-end; }
+    .justify-content-between { @apply justify-between; }
+    .justify-content-center { @apply justify-center; }
+    .justify-content-end { @apply justify-end; }
+    .me-1 { @apply mr-1; }
+    .me-2 { @apply mr-2; }
+    .ms-auto { @apply ml-auto; }
+
+    .w-100 { @apply w-full; }
+    .h-100 { @apply h-full; }
+
+    .h2 { @apply text-3xl font-bold; }
+    .h3 { @apply text-2xl font-bold; }
+    .h4 { @apply text-xl font-bold; }
+    .h5 { @apply text-lg font-bold; }
+    .h6 { @apply text-base font-bold; }
+    .display-6 { @apply text-4xl font-bold; }
+    .lead { @apply text-lg leading-relaxed; }
+    .small { @apply text-sm; }
+    .fs-1 { @apply text-4xl; }
+    .fs-3 { @apply text-2xl; }
+    .fs-4 { @apply text-xl; }
+    .fs-5 { @apply text-lg; }
+    .fs-6 { @apply text-base; }
+    .fw-bold { @apply font-bold; }
+    .fw-semibold { @apply font-semibold; }
+    .fw-normal { @apply font-normal; }
+    .lh-sm { @apply leading-tight; }
+
+    .text-muted { @apply text-slate-500; }
+    .text-dark { @apply text-slate-900; }
+    .text-white-50 { @apply text-white/60; }
+    .text-primary { @apply text-pusaka-teal-dark; }
+    .text-success { @apply text-emerald-700; }
+    .text-warning { @apply text-amber-700; }
+    .text-danger { @apply text-red-700; }
+    .text-end { @apply text-right; }
+    .text-uppercase { @apply uppercase; }
+    .text-decoration-none { @apply no-underline; }
+    .text-break { @apply break-words; }
+    .text-wrap { @apply whitespace-normal; }
+    .text-nowrap { @apply whitespace-nowrap; }
+    .text-truncate { @apply truncate; }
+    .font-monospace { @apply font-mono; }
+    .rounded-2 { @apply rounded-lg; }
+    .rounded-pill { @apply rounded-full; }
+    .border-top { @apply border-t; }
+    .border-bottom { @apply border-b; }
+    .sticky-top { @apply sticky top-0; }
+
+    @screen lg {
+        .text-lg-end { @apply text-right; }
+        .justify-content-lg-center { @apply justify-center; }
+        .flex-lg-row { @apply flex-row; }
+        .flex-lg-column { @apply flex-col; }
+        .p-lg-5 { @apply p-12; }
+    }
+
+    @screen xl {
+        .align-items-xl-center { @apply items-center; }
+        .gap-xl-1 { @apply gap-1; }
+        .ms-xl-2 { @apply ml-2; }
+    }
+}

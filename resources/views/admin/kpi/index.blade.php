@@ -14,10 +14,30 @@
 </div>
 
 <div class="row g-3 mb-4">
-    <div class="col-sm-6 col-xl-3"><div class="metric p-3"><div class="small text-muted">Respons Survei</div><div class="h3 mb-0">{{ number_format($actuals['survey_responses']) }}</div></div></div>
-    <div class="col-sm-6 col-xl-3"><div class="metric p-3"><div class="small text-muted">Kepuasan</div><div class="h3 mb-0">{{ number_format($actuals['satisfaction'], 1) }}%</div></div></div>
-    <div class="col-sm-6 col-xl-3"><div class="metric p-3"><div class="small text-muted">Waktu Pencarian</div><div class="h3 mb-0">{{ $actuals['search_time'] ? number_format($actuals['search_time'] / 60, 1).' menit' : '-' }}</div></div></div>
-    <div class="col-sm-6 col-xl-3"><div class="metric p-3"><div class="small text-muted">Pembaruan 30 Hari</div><div class="h3 mb-0">{{ number_format($actuals['monthly_updates']) }}</div></div></div>
+    <div class="col-sm-6 col-xl-3">
+        <div class="stat-card">
+            <span class="stat-card-icon"><i data-lucide="message-square-text"></i></span>
+            <div><div class="stat-card-value">{{ number_format($actuals['survey_responses']) }}</div><div class="stat-card-label">Respons Survei</div></div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+        <div class="stat-card">
+            <span class="stat-card-icon bg-emerald-50 text-emerald-700"><i data-lucide="circle-check-big"></i></span>
+            <div><div class="stat-card-value">{{ number_format($actuals['satisfaction'], 1) }}%</div><div class="stat-card-label">Kepuasan</div></div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+        <div class="stat-card">
+            <span class="stat-card-icon"><i data-lucide="search"></i></span>
+            <div><div class="stat-card-value">{{ $actuals['search_time'] ? number_format($actuals['search_time'] / 60, 1).' menit' : '-' }}</div><div class="stat-card-label">Waktu Pencarian</div></div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+        <div class="stat-card">
+            <span class="stat-card-icon"><i data-lucide="refresh-cw"></i></span>
+            <div><div class="stat-card-value">{{ number_format($actuals['monthly_updates']) }}</div><div class="stat-card-label">Pembaruan 30 Hari</div></div>
+        </div>
+    </div>
 </div>
 
 <ul class="nav nav-tabs mb-4" role="tablist">
@@ -35,7 +55,7 @@
                         <h2 class="h5 mb-0">Tren Enam Bulan</h2>
                         <span class="small text-muted">Akses dan kepuasan</span>
                     </div>
-                    <div style="height: 300px"><canvas id="kpiTrendChart"></canvas></div>
+                    <div style="position: relative; width: 100%; height: 300px"><canvas id="kpiTrendChart"></canvas></div>
                 </div>
             </div>
             <div class="col-xl-4">
@@ -53,41 +73,57 @@
 
         <div class="content-card p-3">
             <h2 class="h5 mb-3">Matriks Capaian</h2>
-            <div class="table-responsive">
-                <table class="table align-middle mb-0">
-                    <thead><tr><th>Indikator</th><th>Realisasi</th><th>Target</th><th style="min-width: 180px">Capaian</th><th>Status</th></tr></thead>
-                    <tbody>
-                    @foreach($indicators as $indicator)
-                        @php
-                            $noData = array_key_exists('has_data', $indicator) && ! $indicator['has_data'];
-                        @endphp
-                        <tr>
-                            <td>
-                                <div class="fw-semibold">{{ $indicator['label'] }}</div>
-                                @if($indicator['manual'])<span class="badge text-bg-light border">Verifikasi admin</span>@endif
-                            </td>
-                            <td>{{ $noData ? '-' : number_format($indicator['actual'], is_float($indicator['actual']) ? 1 : 0) }} {{ $noData ? '' : $indicator['unit'] }}</td>
-                            <td>{{ number_format($indicator['target'], is_float($indicator['target']) ? 1 : 0) }} {{ $indicator['unit'] }}</td>
-                            <td>
-                                <div class="progress" role="progressbar" aria-label="Capaian {{ $indicator['label'] }}" aria-valuenow="{{ $indicator['progress'] }}" aria-valuemin="0" aria-valuemax="100" style="height: 8px">
-                                    <div class="progress-bar {{ $indicator['achieved'] ? 'bg-success' : 'bg-warning' }}" style="width: {{ $indicator['progress'] }}%"></div>
-                                </div>
-                                <span class="small text-muted">{{ number_format($indicator['progress'], 1) }}%</span>
-                            </td>
-                            <td>
-                                @if($noData)
-                                    <span class="badge text-bg-secondary">Belum ada data</span>
-                                @elseif($indicator['achieved'])
-                                    <span class="badge text-bg-success">Tercapai</span>
-                                @else
-                                    <span class="badge text-bg-warning">Belum tercapai</span>
-                                @endif
-                            </td>
-                        </tr>
-                    @endforeach
-                    </tbody>
-                </table>
-            </div>
+            @php
+                $groupIcons = [
+                    'Dokumen' => 'files',
+                    'Pengguna & Akses' => 'users',
+                    'Kualitas Layanan' => 'shield-check',
+                    'Cakupan Wilayah' => 'map-pin',
+                ];
+            @endphp
+            @foreach(collect($indicators)->groupBy('group') as $groupName => $groupIndicators)
+                <div class="admin-section-title"><i data-lucide="{{ $groupIcons[$groupName] ?? 'list-checks' }}"></i> {{ $groupName }}</div>
+                <div class="table-responsive">
+                    <table class="table align-middle mb-0">
+                        <thead><tr><th>Indikator</th><th>Realisasi</th><th>Target</th><th style="min-width: 180px">Capaian</th><th>Status</th></tr></thead>
+                        <tbody>
+                        @foreach($groupIndicators as $indicator)
+                            @php
+                                $noData = array_key_exists('has_data', $indicator) && ! $indicator['has_data'];
+                            @endphp
+                            <tr>
+                                <td>
+                                    <div class="fw-semibold">{{ $indicator['label'] }}</div>
+                                    @if($indicator['manual'])<span class="badge text-bg-light border">Verifikasi admin</span>@endif
+                                    @if($indicator['label'] === 'Cakupan Satker')
+                                        <div class="small text-muted mt-1">{{ $detectedUnits['satker']->count() }} satuan kerja unik terdeteksi dari data pengguna aktif</div>
+                                    @elseif($indicator['label'] === 'Cakupan Polres')
+                                        <div class="small text-muted mt-1">{{ $detectedUnits['polres']->count() }} Polres/Polresta unik terdeteksi dari data pengguna aktif</div>
+                                    @endif
+                                </td>
+                                <td>{{ $noData ? '-' : number_format($indicator['actual'], is_float($indicator['actual']) ? 1 : 0) }} {{ $noData ? '' : $indicator['unit'] }}</td>
+                                <td>{{ number_format($indicator['target'], is_float($indicator['target']) ? 1 : 0) }} {{ $indicator['unit'] }}</td>
+                                <td>
+                                    <div class="progress" role="progressbar" aria-label="Capaian {{ $indicator['label'] }}" aria-valuenow="{{ $indicator['progress'] }}" aria-valuemin="0" aria-valuemax="100" style="height: 8px">
+                                        <div class="progress-bar {{ $indicator['achieved'] ? 'bg-success' : 'bg-warning' }}" style="width: {{ $indicator['progress'] }}%"></div>
+                                    </div>
+                                    <span class="small text-muted">{{ number_format($indicator['progress'], 1) }}%</span>
+                                </td>
+                                <td>
+                                    @if($noData)
+                                        <span class="badge text-bg-secondary">Belum ada data</span>
+                                    @elseif($indicator['achieved'])
+                                        <span class="badge text-bg-success">Tercapai</span>
+                                    @else
+                                        <span class="badge text-bg-warning">Belum tercapai</span>
+                                    @endif
+                                </td>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            @endforeach
         </div>
     </div>
 
@@ -155,10 +191,45 @@
             <div class="content-card p-3">
                 <h2 class="h5">Verifikasi Operasional</h2>
                 <p class="text-muted small">Isi berdasarkan bukti implementasi terbaru, bukan perkiraan.</p>
+
+                <div class="alert alert-info border-0 mb-3">
+                    <div class="d-flex align-items-center gap-2 mb-2 fw-semibold"><i data-lucide="info"></i> Bukti pendukung otomatis</div>
+                    <p class="small mb-2">
+                        Belum ada daftar resmi seluruh Satker &amp; Polres jajaran Polda Lampung di sistem ini, jadi persentase cakupan di bawah
+                        <strong>masih diisi manual</strong>. Daftar berikut dihitung otomatis dari kolom &ldquo;Satuan Kerja&rdquo; pengguna aktif
+                        sebagai pembanding &mdash; gunakan untuk mengecek kewajaran angka yang Anda masukkan.
+                    </p>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="small fw-semibold mb-1">Satker terdeteksi ({{ $detectedUnits['satker']->count() }})</div>
+                            @if($detectedUnits['satker']->isNotEmpty())
+                                <div class="small text-muted">{{ $detectedUnits['satker']->implode(', ') }}</div>
+                            @else
+                                <div class="small text-muted">Belum ada pengguna aktif dengan satuan kerja terisi.</div>
+                            @endif
+                        </div>
+                        <div class="col-md-6">
+                            <div class="small fw-semibold mb-1">Polres/Polresta terdeteksi ({{ $detectedUnits['polres']->count() }})</div>
+                            @if($detectedUnits['polres']->isNotEmpty())
+                                <div class="small text-muted">{{ $detectedUnits['polres']->implode(', ') }}</div>
+                            @else
+                                <div class="small text-muted">Belum ada pengguna aktif dengan satuan kerja Polres/Polresta terisi.</div>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+
                 <div class="row g-3">
                     <div class="col-md-4"><label class="form-label" for="satker_coverage_percent">Realisasi cakupan Satker (%)</label><input class="form-control" type="number" min="0" max="100" step="0.1" id="satker_coverage_percent" name="satker_coverage_percent" value="{{ old('satker_coverage_percent', $target->satker_coverage_percent) }}" required></div>
                     <div class="col-md-4"><label class="form-label" for="polres_coverage_percent">Realisasi cakupan Polres (%)</label><input class="form-control" type="number" min="0" max="100" step="0.1" id="polres_coverage_percent" name="polres_coverage_percent" value="{{ old('polres_coverage_percent', $target->polres_coverage_percent) }}" required></div>
-                    <div class="col-md-4"><label class="form-label" for="appointed_admin_count">Admin yang ditunjuk</label><input class="form-control" type="number" min="0" id="appointed_admin_count" name="appointed_admin_count" value="{{ old('appointed_admin_count', $target->appointed_admin_count) }}" required></div>
+                    <div class="col-md-4">
+                        <label class="form-label">Admin yang ditunjuk</label>
+                        <div class="form-control bg-light d-flex align-items-center gap-2" style="min-height: 2.5rem;">
+                            <i data-lucide="shield-check"></i>
+                            <span class="fw-semibold">{{ $actuals['appointed_admins'] }} orang</span>
+                        </div>
+                        <div class="form-text">Dihitung otomatis dari pengguna berperan admin/super admin yang aktif — tidak perlu diisi manual.</div>
+                    </div>
                     <div class="col-md-6">
                         <div class="form-check form-switch mt-md-4">
                             <input type="hidden" name="sop_available" value="0">

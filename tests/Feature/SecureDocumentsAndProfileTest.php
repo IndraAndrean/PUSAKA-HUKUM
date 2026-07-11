@@ -224,6 +224,45 @@ class SecureDocumentsAndProfileTest extends TestCase
         $this->assertSame($document->file_path, $document->fresh()->file_path);
     }
 
+    public function test_login_attempts_are_throttled(): void
+    {
+        $request = ['email' => 'nobody@pusakahukum.test', 'password' => 'password-salah'];
+        $server = ['REMOTE_ADDR' => '10.60.0.10'];
+
+        for ($attempt = 0; $attempt < 5; $attempt++) {
+            $this->withServerVariables($server)
+                ->post(route('login.store'), $request)
+                ->assertSessionHasErrors('email');
+        }
+
+        $this->withServerVariables($server)
+            ->post(route('login.store'), $request)
+            ->assertTooManyRequests();
+    }
+
+    public function test_public_consultation_submissions_are_throttled(): void
+    {
+        $server = ['REMOTE_ADDR' => '10.60.0.11'];
+
+        for ($attempt = 0; $attempt < 5; $attempt++) {
+            $this->withServerVariables($server)
+                ->post(route('consultation.store'), [
+                    'name' => 'Pemohon Uji '.$attempt,
+                    'email' => 'pemohon'.$attempt.'@pusakahukum.test',
+                    'question' => 'Pertanyaan konsultasi untuk pengujian pembatasan request.',
+                ])
+                ->assertSessionHasNoErrors();
+        }
+
+        $this->withServerVariables($server)
+            ->post(route('consultation.store'), [
+                'name' => 'Pemohon Uji Batas',
+                'email' => 'pemohon-batas@pusakahukum.test',
+                'question' => 'Pertanyaan konsultasi untuk memastikan request keenam dibatasi.',
+            ])
+            ->assertTooManyRequests();
+    }
+
     private function createUser(string $role, string $email): User
     {
         return User::create([

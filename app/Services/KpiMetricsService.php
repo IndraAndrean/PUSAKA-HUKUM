@@ -46,7 +46,7 @@ class KpiMetricsService
             'search_time' => (int) round($averageSearchSeconds),
             'satker_coverage' => $target->satker_coverage_percent,
             'polres_coverage' => $target->polres_coverage_percent,
-            'appointed_admins' => $target->appointed_admin_count,
+            'appointed_admins' => User::whereIn('role', ['admin', 'super_admin'])->where('is_active', true)->count(),
             'sop_available' => $target->sop_available,
             'user_guide_available' => $target->user_guide_available,
             'monthly_updates' => Document::where('updated_at', '>=', now()->subMonth())->count(),
@@ -57,6 +57,31 @@ class KpiMetricsService
             'actuals' => $actuals,
             'indicators' => $this->indicators($target, $actuals),
             'trends' => $this->trends(),
+            'detectedUnits' => $this->detectedUnits(),
+        ];
+    }
+
+    /**
+     * Satuan kerja unik yang terdeteksi dari data pengguna aktif — bukti pendukung untuk
+     * mengecek kewajaran angka cakupan Satker/Polres yang masih diinput manual oleh admin
+     * (belum ada daftar resmi seluruh Satker & Polres jajaran Polda Lampung di sistem ini
+     * sebagai penyebut, jadi belum bisa dihitung sebagai persentase otomatis yang pasti).
+     */
+    private function detectedUnits(): array
+    {
+        $units = User::where('is_active', true)
+            ->whereNotNull('satuan_kerja')
+            ->where('satuan_kerja', '!=', '')
+            ->distinct()
+            ->orderBy('satuan_kerja')
+            ->pluck('satuan_kerja');
+
+        $polres = $units->filter(fn ($unit) => str_contains(mb_strtolower($unit), 'polres'))->values();
+        $satker = $units->diff($polres)->values();
+
+        return [
+            'satker' => $satker,
+            'polres' => $polres,
         ];
     }
 
@@ -68,18 +93,18 @@ class KpiMetricsService
     private function indicators(KpiTarget $target, array $actuals): array
     {
         return [
-            $this->higherIndicator('Total dokumen digital', $actuals['documents'], $target->documents_target, 'dokumen'),
-            $this->higherIndicator('Peraturan perundang-undangan', $actuals['legislation'], $target->legislation_target, 'dokumen'),
-            $this->higherIndicator('Produk hukum internal Polri', $actuals['internal_documents'], $target->internal_documents_target, 'dokumen'),
-            $this->higherIndicator('Kajian dan legal opinion', $actuals['legal_studies'], $target->legal_studies_target, 'dokumen'),
-            $this->higherIndicator('Materi penyuluhan', $actuals['education_materials'], $target->education_materials_target, 'dokumen'),
-            $this->higherIndicator('Pengguna aktif terdaftar', $actuals['registered_users'], $target->registered_users_target, 'akun'),
-            $this->higherIndicator('Akses dokumen', $actuals['accesses'], $target->accesses_target, 'akses'),
-            $this->higherIndicator('Kepuasan pengguna', $actuals['satisfaction'], $target->satisfaction_target_percent, '%'),
-            $this->higherIndicator('Pemanfaatan pengguna 30 hari', $actuals['utilization'], $target->utilization_target_percent, '%'),
-            $this->lowerIndicator('Rata-rata waktu pencarian', $actuals['search_time'], $target->search_time_target_seconds, 'detik'),
-            $this->higherIndicator('Cakupan Satker', $actuals['satker_coverage'], $target->satker_coverage_target_percent, '%', true),
-            $this->higherIndicator('Cakupan Polres', $actuals['polres_coverage'], $target->polres_coverage_target_percent, '%', true),
+            $this->higherIndicator('Total dokumen digital', $actuals['documents'], $target->documents_target, 'dokumen', group: 'Dokumen'),
+            $this->higherIndicator('Peraturan perundang-undangan', $actuals['legislation'], $target->legislation_target, 'dokumen', group: 'Dokumen'),
+            $this->higherIndicator('Produk hukum internal Polri', $actuals['internal_documents'], $target->internal_documents_target, 'dokumen', group: 'Dokumen'),
+            $this->higherIndicator('Kajian dan legal opinion', $actuals['legal_studies'], $target->legal_studies_target, 'dokumen', group: 'Dokumen'),
+            $this->higherIndicator('Materi penyuluhan', $actuals['education_materials'], $target->education_materials_target, 'dokumen', group: 'Dokumen'),
+            $this->higherIndicator('Pengguna aktif terdaftar', $actuals['registered_users'], $target->registered_users_target, 'akun', group: 'Pengguna & Akses'),
+            $this->higherIndicator('Akses dokumen', $actuals['accesses'], $target->accesses_target, 'akses', group: 'Pengguna & Akses'),
+            $this->higherIndicator('Pemanfaatan pengguna 30 hari', $actuals['utilization'], $target->utilization_target_percent, '%', group: 'Pengguna & Akses'),
+            $this->higherIndicator('Kepuasan pengguna', $actuals['satisfaction'], $target->satisfaction_target_percent, '%', group: 'Kualitas Layanan'),
+            $this->lowerIndicator('Rata-rata waktu pencarian', $actuals['search_time'], $target->search_time_target_seconds, 'detik', group: 'Kualitas Layanan'),
+            $this->higherIndicator('Cakupan Satker', $actuals['satker_coverage'], $target->satker_coverage_target_percent, '%', manual: true, group: 'Cakupan Wilayah'),
+            $this->higherIndicator('Cakupan Polres', $actuals['polres_coverage'], $target->polres_coverage_target_percent, '%', manual: true, group: 'Cakupan Wilayah'),
         ];
     }
 
@@ -88,7 +113,8 @@ class KpiMetricsService
         float|int $actual,
         float|int $target,
         string $unit,
-        bool $manual = false
+        bool $manual = false,
+        string $group = 'Lainnya'
     ): array {
         $progress = $target > 0 ? min(100, ($actual / $target) * 100) : 0;
 
@@ -100,10 +126,11 @@ class KpiMetricsService
             'progress' => round($progress, 1),
             'achieved' => $target > 0 && $actual >= $target,
             'manual' => $manual,
+            'group' => $group,
         ];
     }
 
-    private function lowerIndicator(string $label, float|int $actual, float|int $target, string $unit): array
+    private function lowerIndicator(string $label, float|int $actual, float|int $target, string $unit, string $group = 'Lainnya'): array
     {
         $hasData = $actual > 0;
         $progress = $hasData && $actual > 0 ? min(100, ($target / $actual) * 100) : 0;
@@ -117,6 +144,7 @@ class KpiMetricsService
             'achieved' => $hasData && $actual <= $target,
             'manual' => false,
             'has_data' => $hasData,
+            'group' => $group,
         ];
     }
 

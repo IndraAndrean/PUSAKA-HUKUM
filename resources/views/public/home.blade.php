@@ -19,9 +19,13 @@
                         <button class="btn btn-warning px-4" type="submit"><i class="bi bi-search me-1"></i> Cari</button>
                     </div>
                 </form>
-                <div class="d-flex flex-wrap gap-2 mt-3">
+                <div class="d-flex flex-wrap align-items-center gap-2 mt-3">
                     <a class="btn btn-sm btn-outline-light" href="{{ route('documents.index') }}"><i class="bi bi-file-earmark-text me-1"></i> Produk Hukum</a>
                     <a class="btn btn-sm btn-outline-light" href="{{ route('library.index') }}"><i class="bi bi-book me-1"></i> Perpustakaan Digital</a>
+                    <a class="btn btn-sm btn-outline-light" href="{{ route('education-materials.index') }}"><i class="bi bi-mortarboard me-1"></i> Materi Penyuluhan</a>
+                    @foreach($documentTypes->take(4) as $quickType)
+                        <a class="btn btn-sm btn-outline-light" href="{{ route('documents.index', ['type' => $quickType->id]) }}">{{ $quickType->name }}</a>
+                    @endforeach
                 </div>
             </div>
         </div>
@@ -87,13 +91,8 @@
         </div>
         <div class="row g-3">
             @forelse($latestDocuments as $document)
-                <div class="col-md-6 col-xl-4">
-                    <div class="item-card p-3 h-100">
-                        <span class="badge badge-access mb-2">{{ ucfirst($document->access_level) }}</span>
-                        <h3 class="h6"><a class="text-decoration-none text-dark" href="{{ route('documents.show', $document) }}">{{ $document->title }}</a></h3>
-                        <div class="small text-muted">{{ $document->type?->name }} @if($document->year) - {{ $document->year }} @endif</div>
-                        <p class="small mt-2 mb-0">{{ str($document->summary)->limit(110) }}</p>
-                    </div>
+                <div class="col-12">
+                    @include('public.documents._document-card', ['document' => $document])
                 </div>
             @empty
                 <div class="col-12"><div class="alert alert-info">Belum ada dokumen yang tersedia.</div></div>

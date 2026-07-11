@@ -31,10 +31,11 @@
                 <li class="nav-item"><a class="nav-link {{ request()->routeIs('library.*') ? 'active' : '' }}" href="{{ route('library.index') }}">Perpustakaan</a></li>
                 <li class="nav-item"><a class="nav-link {{ request()->routeIs('organization-profile.*') ? 'active' : '' }}" href="{{ route('organization-profile.show') }}">Profil</a></li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle {{ request()->routeIs('articles.*', 'faqs.*', 'consultation.*', 'surveys.*') ? 'active' : '' }}" href="#" role="button" data-ui-toggle="dropdown" aria-expanded="false">Layanan</a>
+                    <a class="nav-link dropdown-toggle {{ request()->routeIs('articles.*', 'faqs.*', 'education-materials.*', 'consultation.*', 'surveys.*') ? 'active' : '' }}" href="#" role="button" data-ui-toggle="dropdown" aria-expanded="false">Layanan</a>
                     <ul class="dropdown-menu dropdown-menu-end">
                         <li><a class="dropdown-item" href="{{ route('articles.index') }}"><i class="bi bi-newspaper me-2"></i>Artikel Hukum</a></li>
                         <li><a class="dropdown-item" href="{{ route('faqs.index') }}"><i class="bi bi-question-circle me-2"></i>FAQ Hukum</a></li>
+                        <li><a class="dropdown-item" href="{{ route('education-materials.index') }}"><i class="bi bi-mortarboard me-2"></i>Materi Penyuluhan</a></li>
                         <li><a class="dropdown-item" href="{{ route('consultation.create') }}"><i class="bi bi-chat-left-text me-2"></i>Konsultasi</a></li>
                         <li><a class="dropdown-item" href="{{ route('surveys.create') }}"><i class="bi bi-ui-checks-grid me-2"></i>Survei Kepuasan</a></li>
                     </ul>
@@ -50,6 +51,7 @@
                         <ul class="dropdown-menu dropdown-menu-end">
                             <li><a class="dropdown-item" href="{{ route('profile.edit') }}"><i class="bi bi-person me-2"></i>Profil Saya</a></li>
                             <li><a class="dropdown-item" href="{{ route('account.activity') }}"><i class="bi bi-clock-history me-2"></i>Aktivitas Saya</a></li>
+                            <li><a class="dropdown-item" href="{{ route('consultation.mine') }}"><i class="bi bi-chat-left-text me-2"></i>Konsultasi Saya</a></li>
                             <li><hr class="dropdown-divider"></li>
                             <li>
                                 <form action="{{ route('logout') }}" method="post">
@@ -107,6 +109,7 @@
                     <a href="{{ route('documents.index') }}">Produk Hukum</a>
                     <a href="{{ route('library.index') }}">Perpustakaan Digital</a>
                     <a href="{{ route('articles.index') }}">Knowledge Center</a>
+                    <a href="{{ route('education-materials.index') }}">Materi Penyuluhan</a>
                     <a href="{{ route('faqs.index') }}">FAQ</a>
                     <a href="{{ route('consultation.create') }}">Konsultasi</a>
                     <a href="{{ route('organization-profile.show') }}">Profil Instansi</a>
@@ -121,7 +124,7 @@
                     <a href="{{ route('documents.index') }}">Surat Edaran</a>
                     <a href="{{ route('documents.index') }}">Juklak/Juknis</a>
                     <a href="{{ route('library.index') }}">Kajian Hukum</a>
-                    <a href="{{ route('documents.index') }}">Materi Penyuluhan</a>
+                    <a href="{{ route('education-materials.index') }}">Materi Penyuluhan</a>
                 </div>
             </div>
 

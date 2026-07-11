@@ -31,7 +31,7 @@ class HomeController extends Controller
             'latestDocuments' => Document::with(['type', 'category'])
                 ->visibleFor(auth()->user())
                 ->latest()
-                ->take(6)
+                ->take(4)
                 ->get(),
             'latestArticles' => Article::where('status', 'published')
                 ->latest('published_at')

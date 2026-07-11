@@ -5,14 +5,23 @@
 @section('content')
 <section class="py-5">
     <div class="container">
+        <nav class="breadcrumb">
+            <span class="breadcrumb-item"><a href="{{ route('home') }}">Beranda</a></span>
+            <span class="breadcrumb-item"><i data-lucide="chevron-right"></i></span>
+            <span class="breadcrumb-item"><a href="{{ route('articles.index') }}">Knowledge Center</a></span>
+            <span class="breadcrumb-item"><i data-lucide="chevron-right"></i></span>
+            <span class="breadcrumb-item active">{{ $article->title }}</span>
+        </nav>
+
         <div class="row justify-content-center">
             <div class="col-lg-9">
-                <a class="btn btn-sm btn-outline-secondary mb-3" href="{{ route('articles.index') }}"><i class="bi bi-arrow-left"></i> Kembali</a>
                 <article class="item-card p-4 p-lg-5">
-                    <div class="text-muted small mb-2">
-                        {{ $article->category ?: 'Artikel Hukum' }}
+                    <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
+                        @if($article->category)
+                            <span class="badge text-bg-secondary">{{ $article->category }}</span>
+                        @endif
                         @if($article->published_at)
-                            | {{ $article->published_at->format('d/m/Y') }}
+                            <span class="small text-muted d-inline-flex align-items-center gap-1"><i data-lucide="calendar"></i> {{ $article->published_at->format('d/m/Y') }}</span>
                         @endif
                     </div>
                     <h1 class="h2 mb-3">{{ $article->title }}</h1>
@@ -20,9 +29,20 @@
                         <p class="lead text-muted">{{ $article->excerpt }}</p>
                     @endif
                     <hr>
-                    <div style="white-space: pre-line; line-height: 1.8;">{{ $article->content }}</div>
-                    <div class="small text-muted mt-4">Penulis: {{ $article->author?->name ?? 'Pengelola PUSAKA HUKUM' }}</div>
+                    <div class="article-body">{{ $article->content }}</div>
+                    <div class="small text-muted mt-4 d-flex align-items-center gap-1"><i data-lucide="user"></i> Penulis: {{ $article->author?->name ?? 'Pengelola PUSAKA HUKUM' }}</div>
                 </article>
+
+                @if($relatedArticles->isNotEmpty())
+                    <div class="mt-5">
+                        <h2 class="h5 mb-3">Artikel Terkait</h2>
+                        <div class="related-docs">
+                            @foreach($relatedArticles as $related)
+                                @include('public.articles._article-card', ['article' => $related])
+                            @endforeach
+                        </div>
+                    </div>
+                @endif
             </div>
         </div>
     </div>

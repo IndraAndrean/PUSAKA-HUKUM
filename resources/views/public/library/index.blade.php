@@ -5,6 +5,11 @@
 @section('content')
 <section class="page-intro py-5">
     <div class="container">
+        <nav class="breadcrumb mb-3">
+            <span class="breadcrumb-item"><a href="{{ route('home') }}">Beranda</a></span>
+            <span class="breadcrumb-item"><i data-lucide="chevron-right"></i></span>
+            <span class="breadcrumb-item active">Perpustakaan Digital</span>
+        </nav>
         <div class="row align-items-end g-4">
             <div class="col-lg-8">
                 <div class="section-eyebrow mb-2">Referensi dan Kajian</div>
@@ -23,81 +28,91 @@
 
 <section class="py-5">
     <div class="container">
+        <form method="get" class="search-toolbar mb-4">
+            <div class="input-group flex-grow-1">
+                <span class="input-group-text bg-white"><i data-lucide="search"></i></span>
+                <input class="form-control" name="q" value="{{ request('q') }}" placeholder="Judul, penulis, ISBN, kata kunci">
+            </div>
+            @if(request('type'))<input type="hidden" name="type" value="{{ request('type') }}">@endif
+            @if(request('category'))<input type="hidden" name="category" value="{{ request('category') }}">@endif
+            @if(request('year'))<input type="hidden" name="year" value="{{ request('year') }}">@endif
+            <button class="btn btn-pusaka" type="submit"><i data-lucide="search"></i> Cari</button>
+            <button class="btn btn-outline-secondary lg:hidden" type="button" data-ui-toggle="collapse" data-ui-target="#libraryFacetPanel" aria-expanded="false" aria-controls="libraryFacetPanel">
+                <i data-lucide="filter"></i> Filter
+            </button>
+        </form>
+
         <div class="row g-4">
-            <aside class="col-lg-3">
-                <form method="get" class="content-card p-3">
-                    <div class="d-flex align-items-center gap-2 fw-semibold mb-3"><i class="bi bi-funnel"></i><span>Filter Koleksi</span></div>
-                    <div class="mb-3">
-                        <label class="form-label small" for="library_q">Pencarian</label>
-                        <input class="form-control" id="library_q" name="q" value="{{ request('q') }}" placeholder="Judul, penulis, ISBN, kata kunci">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label small" for="library_type">Jenis referensi</label>
-                        <select class="form-select" id="library_type" name="type">
-                            <option value="">Semua jenis</option>
-                            @foreach($types as $type)
-                                <option value="{{ $type->id }}" @selected(request('type') == $type->id)>{{ $type->name }} ({{ $type->documents_count }})</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label small" for="library_category">Kategori hukum</label>
-                        <select class="form-select" id="library_category" name="category">
-                            <option value="">Semua kategori</option>
-                            @foreach($categories as $category)
-                                <option value="{{ $category->id }}" @selected(request('category') == $category->id)>{{ $category->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label small" for="library_year">Tahun terbit</label>
-                        <select class="form-select" id="library_year" name="year">
-                            <option value="">Semua tahun</option>
-                            @foreach($years as $year)
-                                <option value="{{ $year }}" @selected(request('year') == $year)>{{ $year }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="d-grid gap-2">
-                        <button class="btn btn-pusaka" type="submit"><i class="bi bi-search me-1"></i> Cari</button>
+            <div class="col-lg-3">
+                <div class="facet-collapse lg:sticky" style="top: 90px;" id="libraryFacetPanel">
+                    <div class="facet-panel">
+                        <div class="facet-group">
+                            <div class="facet-group-title">Jenis Referensi</div>
+                            <div class="facet-list">
+                                @foreach($types as $type)
+                                    @php $isActive = (string) request('type') === (string) $type->id; @endphp
+                                    <a class="facet-link {{ $isActive ? 'active' : '' }}"
+                                       href="{{ $isActive ? route('library.index', request()->except(['type', 'page'])) : route('library.index', array_merge(request()->except('page'), ['type' => $type->id])) }}">
+                                        <span>{{ $type->name }}</span>
+                                        <span class="facet-link-count">{{ $type->documents_count }}</span>
+                                    </a>
+                                @endforeach
+                            </div>
+                        </div>
+
+                        <div class="facet-group">
+                            <div class="facet-group-title">Kategori Hukum</div>
+                            <div class="facet-list">
+                                @foreach($categories as $category)
+                                    @php $isActive = (string) request('category') === (string) $category->id; @endphp
+                                    <a class="facet-link {{ $isActive ? 'active' : '' }}"
+                                       href="{{ $isActive ? route('library.index', request()->except(['category', 'page'])) : route('library.index', array_merge(request()->except('page'), ['category' => $category->id])) }}">
+                                        <span>{{ $category->name }}</span>
+                                    </a>
+                                @endforeach
+                            </div>
+                        </div>
+
+                        @if($years->isNotEmpty())
+                            <div class="facet-group">
+                                <div class="facet-group-title">Tahun Terbit</div>
+                                <select class="form-select" onchange="if(this.value){window.location.href=this.value}" aria-label="Filter tahun">
+                                    <option value="{{ route('library.index', request()->except(['year', 'page'])) }}">Semua Tahun</option>
+                                    @foreach($years as $year)
+                                        <option value="{{ route('library.index', array_merge(request()->except('page'), ['year' => $year])) }}" @selected(request('year') == $year)>{{ $year }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        @endif
+
                         @if(request()->hasAny(['q', 'type', 'category', 'year']))
-                            <a class="btn btn-outline-secondary" href="{{ route('library.index') }}">Bersihkan</a>
+                            <a class="btn btn-outline-secondary btn-sm w-100" href="{{ route('library.index') }}"><i data-lucide="rotate-ccw"></i> Bersihkan Filter</a>
                         @endif
                     </div>
-                </form>
-            </aside>
+                </div>
+            </div>
 
             <div class="col-lg-9">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h2 class="h5 mb-0">Daftar Koleksi</h2>
-                    <span class="small text-muted">{{ $documents->total() }} hasil</span>
-                </div>
+                <div class="result-count mb-3"><strong>{{ $documents->total() }}</strong> koleksi ditemukan</div>
+
                 <div class="row g-3">
                     @forelse($documents as $document)
-                        <div class="col-md-6">
-                            <article class="item-card p-3 h-100 d-flex flex-column">
-                                <div class="d-flex flex-wrap gap-2 mb-3">
-                                    <span class="badge text-bg-secondary">{{ $document->type?->name }}</span>
-                                    <span class="badge badge-access">{{ ucfirst($document->access_level) }}</span>
-                                </div>
-                                <h3 class="h5"><a class="text-dark text-decoration-none" href="{{ route('documents.show', $document) }}">{{ $document->title }}</a></h3>
-                                <dl class="row small mb-2">
-                                    <dt class="col-4 text-muted fw-normal">Penulis</dt><dd class="col-8 mb-1">{{ $document->author ?: '-' }}</dd>
-                                    <dt class="col-4 text-muted fw-normal">Penerbit</dt><dd class="col-8 mb-1">{{ $document->publisher ?: $document->issuing_institution }}</dd>
-                                    <dt class="col-4 text-muted fw-normal">Tahun</dt><dd class="col-8 mb-1">{{ $document->year ?: '-' }}</dd>
-                                </dl>
-                                <p class="small text-muted flex-grow-1">{{ str($document->summary)->limit(150) }}</p>
-                                <div class="d-flex gap-2">
-                                    <a class="btn btn-sm btn-outline-secondary" href="{{ route('documents.show', $document) }}"><i class="bi bi-eye me-1"></i> Detail</a>
-                                    <a class="btn btn-sm btn-pusaka" href="{{ route('documents.download', $document) }}"><i class="bi bi-download me-1"></i> Unduh</a>
-                                </div>
-                            </article>
+                        <div class="col-12">
+                            @include('public.documents._document-card', ['document' => $document])
                         </div>
                     @empty
-                        <div class="col-12"><div class="alert alert-info mb-0">Belum ada koleksi perpustakaan yang sesuai dengan pencarian.</div></div>
+                        <div class="col-12">
+                            <div class="empty-state">
+                                <span class="empty-state-icon"><i data-lucide="search-x"></i></span>
+                                <h2 class="h5 mb-0">Belum ada koleksi yang sesuai</h2>
+                                <p class="text-muted mb-2">Coba ubah kata kunci atau hapus sebagian filter pencarian.</p>
+                                <a class="btn btn-outline-secondary btn-sm" href="{{ route('library.index') }}"><i data-lucide="rotate-ccw"></i> Reset Filter</a>
+                            </div>
+                        </div>
                     @endforelse
                 </div>
-                <div class="mt-4">{{ $documents->links() }}</div>
+
+                <div class="mt-4">{{ $documents->links('vendor.pagination.pusaka') }}</div>
             </div>
         </div>
     </div>

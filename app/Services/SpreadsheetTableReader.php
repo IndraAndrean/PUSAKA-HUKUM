@@ -57,7 +57,7 @@ class SpreadsheetTableReader
                 throw new RuntimeException('Sheet pertama pada XLSX tidak ditemukan.');
             }
 
-            $sheet = new SimpleXMLElement($sheetXml);
+            $sheet = new SimpleXMLElement($sheetXml, LIBXML_NONET);
             $sheet->registerXPathNamespace('x', 'http://schemas.openxmlformats.org/spreadsheetml/2006/main');
             $rows = [];
 
@@ -106,7 +106,7 @@ class SpreadsheetTableReader
             return [];
         }
 
-        $document = new SimpleXMLElement($xml);
+        $document = new SimpleXMLElement($xml, LIBXML_NONET);
         $document->registerXPathNamespace('x', 'http://schemas.openxmlformats.org/spreadsheetml/2006/main');
         $strings = [];
 
@@ -128,7 +128,7 @@ class SpreadsheetTableReader
             return 'xl/worksheets/sheet1.xml';
         }
 
-        $workbook = new SimpleXMLElement($workbookXml);
+        $workbook = new SimpleXMLElement($workbookXml, LIBXML_NONET);
         $workbook->registerXPathNamespace('x', 'http://schemas.openxmlformats.org/spreadsheetml/2006/main');
         $workbook->registerXPathNamespace('r', 'http://schemas.openxmlformats.org/officeDocument/2006/relationships');
         $sheet = ($workbook->xpath('//x:sheets/x:sheet') ?: [])[0] ?? null;
@@ -138,7 +138,7 @@ class SpreadsheetTableReader
             return 'xl/worksheets/sheet1.xml';
         }
 
-        $relations = (new SimpleXMLElement($relationsXml))
+        $relations = (new SimpleXMLElement($relationsXml, LIBXML_NONET))
             ->children('http://schemas.openxmlformats.org/package/2006/relationships');
 
         foreach ($relations->Relationship as $relation) {

@@ -466,8 +466,26 @@ class BackupService
     private function mysqlEnvironment(): array
     {
         $password = $this->databaseConfig('password');
+        $environment = [];
 
-        return $password === '' ? [] : ['MYSQL_PWD' => $password];
+        if (PHP_OS_FAMILY === 'Windows') {
+            $systemRoot = getenv('SystemRoot')
+                ?: getenv('WINDIR')
+                ?: ($_SERVER['SystemRoot'] ?? null)
+                ?: ($_SERVER['WINDIR'] ?? null)
+                ?: 'C:\\Windows';
+
+            if (is_string($systemRoot) && $systemRoot !== '' && is_dir($systemRoot)) {
+                $environment['SystemRoot'] = $systemRoot;
+                $environment['WINDIR'] = $systemRoot;
+            }
+        }
+
+        if ($password !== '') {
+            $environment['MYSQL_PWD'] = $password;
+        }
+
+        return $environment;
     }
 
     private function mysqlBinary(string $binary): string

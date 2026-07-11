@@ -38,7 +38,7 @@ class OrganizationProfileController extends Controller
             'organization_values_text' => ['required', 'string'],
             'address' => ['nullable', 'string', 'max:1000'],
             'phone' => ['nullable', 'string', 'max:50'],
-            'email' => ['nullable', 'email', 'max:150'],
+            'email' => ['nullable', 'email:filter', 'max:150'],
             'website' => ['nullable', 'url:http,https', 'max:255'],
             'office_hours' => ['nullable', 'string', 'max:150'],
             'logo' => ['nullable', 'image', 'mimes:png,jpg,jpeg,webp', 'max:2048'],

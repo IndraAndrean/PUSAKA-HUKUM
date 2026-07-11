@@ -5,6 +5,11 @@
 @section('content')
 <section class="section-band py-5">
     <div class="container" style="max-width: 920px">
+        <nav class="breadcrumb">
+            <span class="breadcrumb-item"><a href="{{ route('home') }}">Beranda</a></span>
+            <span class="breadcrumb-item"><i data-lucide="chevron-right"></i></span>
+            <span class="breadcrumb-item active">Survei Kepuasan</span>
+        </nav>
         <div class="mb-4">
             <span class="text-uppercase small fw-semibold text-success">Evaluasi Layanan</span>
             <h1 class="h2 mt-2">Survei Kepuasan PUSAKA HUKUM</h1>
@@ -59,13 +64,15 @@
                     @foreach($ratingQuestions as $field => $question)
                         <fieldset class="border-top py-3">
                             <legend class="fs-6 mb-2">{{ $question }}</legend>
-                            <div class="d-flex flex-wrap gap-3">
+                            <div class="rating-scale">
                                 @for($rating = 1; $rating <= 5; $rating++)
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="{{ $field }}" id="{{ $field }}_{{ $rating }}" value="{{ $rating }}" @checked((int) old($field) === $rating) required>
-                                        <label class="form-check-label" for="{{ $field }}_{{ $rating }}">{{ $rating }}</label>
-                                    </div>
+                                    <input class="rating-scale-input" type="radio" name="{{ $field }}" id="{{ $field }}_{{ $rating }}" value="{{ $rating }}" @checked((int) old($field) === $rating) required>
+                                    <label class="rating-scale-item" for="{{ $field }}_{{ $rating }}">{{ $rating }}</label>
                                 @endfor
+                            </div>
+                            <div class="d-flex justify-content-between small text-muted mt-1" style="max-width: 260px;">
+                                <span>Sangat tidak puas</span>
+                                <span>Sangat puas</span>
                             </div>
                         </fieldset>
                     @endforeach

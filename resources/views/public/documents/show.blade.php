@@ -3,45 +3,110 @@
 @section('title', $document->title.' - PUSAKA HUKUM')
 
 @section('content')
+@php
+    $isLibrary = $document->type?->isLibrary();
+    $isEducation = $document->type?->isEducation();
+    $listRoute = match(true) {
+        $isEducation => route('education-materials.index'),
+        $isLibrary => route('library.index'),
+        default => route('documents.index'),
+    };
+    $listLabel = match(true) {
+        $isEducation => 'Materi Penyuluhan Hukum',
+        $isLibrary => 'Perpustakaan Digital',
+        default => 'Bank Produk Hukum',
+    };
+@endphp
 <section class="py-5">
     <div class="container">
-        <a href="{{ $document->type?->isLibrary() ? route('library.index') : route('documents.index') }}" class="btn btn-sm btn-outline-secondary mb-3"><i class="bi bi-arrow-left"></i> Kembali</a>
+        <nav class="breadcrumb">
+            <span class="breadcrumb-item"><a href="{{ route('home') }}">Beranda</a></span>
+            <span class="breadcrumb-item"><i data-lucide="chevron-right"></i></span>
+            <span class="breadcrumb-item"><a href="{{ $listRoute }}">{{ $listLabel }}</a></span>
+            <span class="breadcrumb-item"><i data-lucide="chevron-right"></i></span>
+            <span class="breadcrumb-item active">{{ $document->title }}</span>
+        </nav>
+
         <div class="row g-4">
             <div class="col-lg-8">
                 <div class="item-card p-4">
-                    <div class="d-flex flex-wrap gap-2 mb-3">
+                    <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
                         <span class="badge text-bg-secondary">{{ $document->type?->name }}</span>
-                        <span class="badge badge-access">{{ ucfirst($document->access_level) }}</span>
-                        <span class="badge text-bg-light">{{ str_replace('_', ' ', ucfirst($document->document_status)) }}</span>
+                        @include('layouts.partials.status-badge', ['document' => $document])
+                        @include('layouts.partials.access-badge', ['document' => $document])
                     </div>
-                    <h1 class="h3">{{ $document->title }}</h1>
-                    <p class="text-muted">{{ $document->summary ?: 'Ringkasan dokumen belum diisi.' }}</p>
+                    <h1 class="h3 mb-1">{{ $document->title }}</h1>
+                    <div class="small text-muted mb-3">Kode Dokumen: <span class="font-monospace">{{ $document->document_code }}</span></div>
+                    <p class="text-muted mb-0">{{ $document->summary ?: 'Ringkasan dokumen belum diisi.' }}</p>
 
-                    <h2 class="h5 mt-4">Metadata Dokumen</h2>
-                    <div class="table-responsive">
-                        <table class="table table-sm align-middle">
-                            <tbody>
-                            <tr><th style="width: 220px;">ID Dokumen</th><td>{{ $document->document_code }}</td></tr>
-                            @if($document->type?->isLibrary())
-                                <tr><th>Penulis/Penyusun</th><td>{{ $document->author ?? '-' }}</td></tr>
-                                <tr><th>Penerbit</th><td>{{ $document->publisher ?? '-' }}</td></tr>
-                                <tr><th>ISBN/ISSN</th><td>{{ $document->isbn_issn ?? '-' }}</td></tr>
-                                <tr><th>Edisi/Volume</th><td>{{ $document->edition_volume ?? '-' }}</td></tr>
-                            @endif
-                            <tr><th>Nomor Dokumen</th><td>{{ $document->document_number ?? '-' }}</td></tr>
-                            <tr><th>Tahun</th><td>{{ $document->year ?? '-' }}</td></tr>
-                            <tr><th>Tanggal Penetapan</th><td>{{ $document->enacted_date?->format('d/m/Y') ?? '-' }}</td></tr>
-                            <tr><th>Tanggal Berlaku</th><td>{{ $document->effective_date?->format('d/m/Y') ?? '-' }}</td></tr>
-                            <tr><th>Instansi Penerbit</th><td>{{ $document->issuing_institution ?? '-' }}</td></tr>
-                            <tr><th>Kategori Hukum</th><td>{{ $document->category?->name ?? '-' }}</td></tr>
-                            <tr><th>Bidang/Subbidang</th><td>{{ $document->bidang_subbidang ? ucfirst($document->bidang_subbidang) : '-' }}</td></tr>
-                            <tr><th>Kata Kunci</th><td>{{ $document->keywords ?? '-' }}</td></tr>
-                            <tr><th>Versi Dokumen</th><td>{{ $document->document_version ?? '-' }}</td></tr>
-                            <tr><th>Review Berikutnya</th><td>{{ $document->next_review_at?->format('d/m/Y') ?? 'Tidak periodik' }}</td></tr>
-                            <tr><th>Pengunggah</th><td>{{ $document->uploader?->name ?? '-' }}</td></tr>
-                            <tr><th>Statistik</th><td>{{ $document->views_count }} dilihat, {{ $document->downloads_count }} diunduh</td></tr>
-                            </tbody>
-                        </table>
+                    <h2 class="h5 mt-4 mb-3">Metadata Dokumen</h2>
+                    <div class="metadata-grid">
+                        <div>
+                            <div class="metadata-item-label"><i data-lucide="hash"></i> ID Dokumen</div>
+                            <div class="metadata-item-value font-monospace">{{ $document->document_code }}</div>
+                        </div>
+                        @if($isLibrary)
+                            <div>
+                                <div class="metadata-item-label"><i data-lucide="user"></i> Penulis/Penyusun</div>
+                                <div class="metadata-item-value">{{ $document->author ?? '-' }}</div>
+                            </div>
+                            <div>
+                                <div class="metadata-item-label"><i data-lucide="building-2"></i> Penerbit</div>
+                                <div class="metadata-item-value">{{ $document->publisher ?? '-' }}</div>
+                            </div>
+                            <div>
+                                <div class="metadata-item-label"><i data-lucide="book"></i> ISBN/ISSN</div>
+                                <div class="metadata-item-value">{{ $document->isbn_issn ?? '-' }}</div>
+                            </div>
+                            <div>
+                                <div class="metadata-item-label"><i data-lucide="files"></i> Edisi/Volume</div>
+                                <div class="metadata-item-value">{{ $document->edition_volume ?? '-' }}</div>
+                            </div>
+                        @endif
+                        <div>
+                            <div class="metadata-item-label"><i data-lucide="hash"></i> Nomor Dokumen</div>
+                            <div class="metadata-item-value">{{ $document->document_number ?? '-' }}</div>
+                        </div>
+                        <div>
+                            <div class="metadata-item-label"><i data-lucide="calendar"></i> Tahun</div>
+                            <div class="metadata-item-value">{{ $document->year ?? '-' }}</div>
+                        </div>
+                        <div>
+                            <div class="metadata-item-label"><i data-lucide="calendar"></i> Tanggal Penetapan</div>
+                            <div class="metadata-item-value">{{ $document->enacted_date?->format('d/m/Y') ?? '-' }}</div>
+                        </div>
+                        <div>
+                            <div class="metadata-item-label"><i data-lucide="calendar"></i> Tanggal Berlaku</div>
+                            <div class="metadata-item-value">{{ $document->effective_date?->format('d/m/Y') ?? '-' }}</div>
+                        </div>
+                        <div>
+                            <div class="metadata-item-label"><i data-lucide="building-2"></i> Instansi Penerbit</div>
+                            <div class="metadata-item-value">{{ $document->issuing_institution ?? '-' }}</div>
+                        </div>
+                        <div>
+                            <div class="metadata-item-label"><i data-lucide="tags"></i> Kategori Hukum</div>
+                            <div class="metadata-item-value">{{ $document->category?->name ?? '-' }}</div>
+                        </div>
+                        <div>
+                            <div class="metadata-item-label"><i data-lucide="folder-open"></i> Bidang/Subbidang</div>
+                            <div class="metadata-item-value">{{ $document->bidang_subbidang ? ucfirst($document->bidang_subbidang) : '-' }}</div>
+                        </div>
+                        <div>
+                            <div class="metadata-item-label"><i data-lucide="history"></i> Versi Dokumen</div>
+                            <div class="metadata-item-value">{{ $document->document_version ?? '-' }}</div>
+                        </div>
+                        <div>
+                            <div class="metadata-item-label"><i data-lucide="refresh-cw"></i> Review Berikutnya</div>
+                            <div class="metadata-item-value">{{ $document->next_review_at?->format('d/m/Y') ?? 'Tidak periodik' }}</div>
+                        </div>
+                        <div>
+                            <div class="metadata-item-label"><i data-lucide="user"></i> Pengunggah</div>
+                            <div class="metadata-item-value">{{ $document->uploader?->name ?? '-' }}</div>
+                        </div>
+                        <div class="sm:col-span-2">
+                            <div class="metadata-item-label"><i data-lucide="tags"></i> Kata Kunci</div>
+                            <div class="metadata-item-value">{{ $document->keywords ?? '-' }}</div>
+                        </div>
                     </div>
 
                     @if($document->abstract)
@@ -64,18 +129,38 @@
                 </div>
             </div>
             <div class="col-lg-4">
-                <div class="item-card p-4">
+                <div class="item-card p-4" style="position: sticky; top: 90px;">
                     <h2 class="h5">Aksi Dokumen</h2>
                     <p class="small text-muted">Unduh file PDF jika tersedia dan sesuai hak akses.</p>
                     @if($hasFile)
-                        <a class="btn btn-outline-secondary w-100 mb-2" href="{{ route('documents.preview', $document) }}" target="_blank" rel="noopener"><i class="bi bi-arrows-fullscreen"></i> Buka Layar Penuh</a>
-                        <a class="btn btn-pusaka w-100" href="{{ route('documents.download', $document) }}"><i class="bi bi-download"></i> Unduh PDF</a>
+                        <a class="btn btn-outline-secondary w-100 mb-2" href="{{ route('documents.preview', $document) }}" target="_blank" rel="noopener"><i data-lucide="maximize"></i> Buka Layar Penuh</a>
+                        <a class="btn btn-pusaka w-100" href="{{ route('documents.download', $document) }}"><i data-lucide="download"></i> Unduh PDF</a>
                     @else
                         <div class="alert alert-warning small mt-3 mb-0">File PDF belum diunggah oleh admin.</div>
                     @endif
+
+                    <hr class="my-4 border-pusaka-line">
+
+                    <h2 class="h6">Info Cepat</h2>
+                    <div class="d-flex flex-column gap-2 small text-muted">
+                        <div class="d-flex align-items-center gap-2"><i data-lucide="eye"></i> {{ $document->views_count }} kali dilihat</div>
+                        <div class="d-flex align-items-center gap-2"><i data-lucide="download"></i> {{ $document->downloads_count }} kali diunduh</div>
+                        <div class="d-flex align-items-center gap-2"><i data-lucide="calendar"></i> Diunggah {{ $document->created_at?->format('d/m/Y') ?? '-' }}</div>
+                    </div>
                 </div>
             </div>
         </div>
+
+        @if($relatedDocuments->isNotEmpty())
+            <div class="mt-5">
+                <h2 class="h5 mb-3">Dokumen Terkait</h2>
+                <div class="related-docs">
+                    @foreach($relatedDocuments as $related)
+                        @include('public.documents._document-card', ['document' => $related])
+                    @endforeach
+                </div>
+            </div>
+        @endif
     </div>
 </section>
 @endsection

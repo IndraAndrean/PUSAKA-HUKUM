@@ -4,18 +4,98 @@
 @section('page_title', 'Dashboard Monitoring')
 
 @section('content')
+@php
+    $trendChip = function (int $delta) {
+        if ($delta > 0) return ['class' => 'up', 'icon' => 'trending-up', 'text' => '+'.$delta.' bulan ini'];
+        if ($delta < 0) return ['class' => 'down', 'icon' => 'trending-down', 'text' => $delta.' bulan ini'];
+        return ['class' => 'flat', 'icon' => null, 'text' => 'Tetap bulan ini'];
+    };
+    $documentsTrend = $trendChip($documentsDelta);
+    $viewsTrend = $trendChip($viewsDelta);
+    $downloadsTrend = $trendChip($downloadsDelta);
+@endphp
 <div class="row g-3 mb-4">
-    <div class="col-md-6 col-xl-3"><div class="metric p-3"><div class="d-flex justify-content-between gap-3"><div><div class="text-muted small">Total Dokumen</div><div class="h3 mb-0 mt-2">{{ $totalDocuments }}</div></div><span class="metric-icon"><i class="bi bi-files"></i></span></div></div></div>
-    <div class="col-md-6 col-xl-3"><div class="metric p-3"><div class="d-flex justify-content-between gap-3"><div><div class="text-muted small">Total Pengguna</div><div class="h3 mb-0 mt-2">{{ $totalUsers }}</div></div><span class="metric-icon"><i class="bi bi-people"></i></span></div></div></div>
-    <div class="col-md-6 col-xl-3"><div class="metric p-3"><div class="d-flex justify-content-between gap-3"><div><div class="text-muted small">Total Dilihat</div><div class="h3 mb-0 mt-2">{{ $totalViews }}</div></div><span class="metric-icon"><i class="bi bi-eye"></i></span></div></div></div>
-    <div class="col-md-6 col-xl-3"><div class="metric p-3"><div class="d-flex justify-content-between gap-3"><div><div class="text-muted small">Total Unduhan</div><div class="h3 mb-0 mt-2">{{ $totalDownloads }}</div></div><span class="metric-icon"><i class="bi bi-download"></i></span></div></div></div>
+    <div class="col-md-6 col-xl-3">
+        <div class="stat-card">
+            <span class="stat-card-icon"><i data-lucide="files"></i></span>
+            <div>
+                <div class="stat-card-value">{{ $totalDocuments }}</div>
+                <div class="stat-card-label">Total Dokumen</div>
+                <span class="stat-trend {{ $documentsTrend['class'] }}">@if($documentsTrend['icon'])<i data-lucide="{{ $documentsTrend['icon'] }}"></i>@endif {{ $documentsTrend['text'] }}</span>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-xl-3">
+        <div class="stat-card">
+            <span class="stat-card-icon"><i data-lucide="users"></i></span>
+            <div>
+                <div class="stat-card-value">{{ $totalUsers }}</div>
+                <div class="stat-card-label">Total Pengguna</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-xl-3">
+        <div class="stat-card">
+            <span class="stat-card-icon"><i data-lucide="eye"></i></span>
+            <div>
+                <div class="stat-card-value">{{ $totalViews }}</div>
+                <div class="stat-card-label">Total Dilihat</div>
+                <span class="stat-trend {{ $viewsTrend['class'] }}">@if($viewsTrend['icon'])<i data-lucide="{{ $viewsTrend['icon'] }}"></i>@endif {{ $viewsTrend['text'] }}</span>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-xl-3">
+        <div class="stat-card">
+            <span class="stat-card-icon"><i data-lucide="download"></i></span>
+            <div>
+                <div class="stat-card-value">{{ $totalDownloads }}</div>
+                <div class="stat-card-label">Total Unduhan</div>
+                <span class="stat-trend {{ $downloadsTrend['class'] }}">@if($downloadsTrend['icon'])<i data-lucide="{{ $downloadsTrend['icon'] }}"></i>@endif {{ $downloadsTrend['text'] }}</span>
+            </div>
+        </div>
+    </div>
 </div>
 
 <div class="row g-3 mb-4">
-    <div class="col-md-6 col-xl-3"><div class="metric p-3"><div class="text-muted small">Rata-rata Metadata</div><div class="h3 mb-0">{{ $averageMetadataCompleteness }}%</div></div></div>
-    <div class="col-md-6 col-xl-3"><div class="metric p-3"><div class="text-muted small">Metadata ≥ 95%</div><div class="h3 mb-0 text-success">{{ $completeMetadataDocuments }}</div></div></div>
-    <div class="col-md-6 col-xl-3"><div class="metric p-3"><div class="text-muted small">Perlu Dilengkapi</div><div class="h3 mb-0 text-warning">{{ $incompleteMetadataDocuments }}</div></div></div>
-    <div class="col-md-6 col-xl-3"><div class="metric p-3"><div class="text-muted small">Jatuh Tempo Review</div><div class="h3 mb-0 text-danger">{{ $documentsDueReview }}</div></div></div>
+    <div class="col-md-6 col-xl-3">
+        <div class="stat-card">
+            <span class="stat-card-icon"><i data-lucide="shield-check"></i></span>
+            <div class="flex-grow-1">
+                <div class="stat-card-value">{{ $averageMetadataCompleteness }}%</div>
+                <div class="stat-card-label">Rata-rata Metadata</div>
+                <div class="progress mt-2" style="height: 6px" role="progressbar" aria-valuenow="{{ $averageMetadataCompleteness }}" aria-valuemin="0" aria-valuemax="100">
+                    <div class="progress-bar {{ $averageMetadataCompleteness >= 95 ? 'bg-success' : 'bg-warning' }}" style="width: {{ $averageMetadataCompleteness }}%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-xl-3">
+        <div class="stat-card">
+            <span class="stat-card-icon bg-emerald-50 text-emerald-700"><i data-lucide="circle-check-big"></i></span>
+            <div>
+                <div class="stat-card-value">{{ $completeMetadataDocuments }}</div>
+                <div class="stat-card-label">Metadata &ge; 95%</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-xl-3">
+        <div class="stat-card">
+            <span class="stat-card-icon bg-amber-50 text-amber-700"><i data-lucide="triangle-alert"></i></span>
+            <div>
+                <div class="stat-card-value">{{ $incompleteMetadataDocuments }}</div>
+                <div class="stat-card-label">Perlu Dilengkapi</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-xl-3">
+        <div class="stat-card">
+            <span class="stat-card-icon bg-red-50 text-red-700"><i data-lucide="history"></i></span>
+            <div>
+                <div class="stat-card-value">{{ $documentsDueReview }}</div>
+                <div class="stat-card-label">Jatuh Tempo Review</div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <div class="row g-4 mb-4">
@@ -25,7 +105,7 @@
                 <h2 class="h5 mb-0">Aktivitas Enam Bulan Terakhir</h2>
                 <span class="small text-muted">Upload, lihat, dan unduh</span>
             </div>
-            <div style="height: 300px;">
+            <div style="position: relative; width: 100%; height: 300px;">
                 <canvas id="activityChart"></canvas>
             </div>
         </div>
@@ -33,10 +113,14 @@
     <div class="col-xl-4">
         <div class="content-card p-3 h-100">
             <h2 class="h5">Ringkasan Sistem</h2>
+            <div style="position: relative; width: 100%; height: 160px;"><canvas id="accessLevelChart"></canvas></div>
+            <div class="chart-legend">
+                <div class="chart-legend-item"><span class="d-flex align-items-center gap-2"><span class="chart-legend-dot" style="background:#14776d"></span> Publik</span><strong>{{ $publicDocuments }}</strong></div>
+                <div class="chart-legend-item"><span class="d-flex align-items-center gap-2"><span class="chart-legend-dot" style="background:#d3a72f"></span> Internal</span><strong>{{ $internalDocuments }}</strong></div>
+                <div class="chart-legend-item"><span class="d-flex align-items-center gap-2"><span class="chart-legend-dot" style="background:#a33b42"></span> Terbatas</span><strong>{{ $restrictedDocuments }}</strong></div>
+            </div>
+            <hr class="my-3 border-pusaka-line">
             <div class="list-group list-group-flush">
-                <div class="list-group-item d-flex justify-content-between px-0"><span>Publik</span><strong>{{ $publicDocuments }}</strong></div>
-                <div class="list-group-item d-flex justify-content-between px-0"><span>Internal</span><strong>{{ $internalDocuments }}</strong></div>
-                <div class="list-group-item d-flex justify-content-between px-0"><span>Terbatas</span><strong>{{ $restrictedDocuments }}</strong></div>
                 <div class="list-group-item d-flex justify-content-between px-0"><span>Artikel</span><strong>{{ $totalArticles }}</strong></div>
                 <div class="list-group-item d-flex justify-content-between px-0"><span>Konsultasi masuk</span><strong>{{ $openConsultations }}</strong></div>
             </div>
@@ -175,6 +259,24 @@
             interaction: { mode: 'index', intersect: false },
             scales: { y: { beginAtZero: true, ticks: { precision: 0 } } },
             plugins: { legend: { position: 'bottom' } }
+        }
+    });
+
+    new Chart(document.getElementById('accessLevelChart'), {
+        type: 'doughnut',
+        data: {
+            labels: ['Publik', 'Internal', 'Terbatas'],
+            datasets: [{
+                data: [{{ $publicDocuments }}, {{ $internalDocuments }}, {{ $restrictedDocuments }}],
+                backgroundColor: ['#14776d', '#d3a72f', '#a33b42'],
+                borderWidth: 0
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '70%',
+            plugins: { legend: { display: false } }
         }
     });
 </script>

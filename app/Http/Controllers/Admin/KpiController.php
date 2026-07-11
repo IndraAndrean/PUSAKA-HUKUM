@@ -23,6 +23,7 @@ class KpiController extends Controller
             'actuals' => $metrics['actuals'],
             'indicators' => $metrics['indicators'],
             'trends' => $metrics['trends'],
+            'detectedUnits' => $metrics['detectedUnits'],
             'surveys' => SatisfactionSurvey::with('user')->latest()->paginate(10),
         ]);
     }
@@ -44,7 +45,6 @@ class KpiController extends Controller
             'polres_coverage_target_percent' => ['required', 'numeric', 'between:1,100'],
             'satker_coverage_percent' => ['required', 'numeric', 'between:0,100'],
             'polres_coverage_percent' => ['required', 'numeric', 'between:0,100'],
-            'appointed_admin_count' => ['required', 'integer', 'min:0', 'max:1000'],
             'sop_available' => ['nullable', 'boolean'],
             'user_guide_available' => ['nullable', 'boolean'],
             'verification_notes' => ['nullable', 'string', 'max:3000'],
@@ -67,14 +67,16 @@ class KpiController extends Controller
 
         return response()->streamDownload(function () use ($metrics, $target) {
             $output = fopen('php://output', 'w');
+            $write = fn (array $row) => fputcsv($output, array_map(self::csvSafe(...), $row));
+
             fwrite($output, "\xEF\xBB\xBF");
-            fputcsv($output, ['LAPORAN INDIKATOR KEBERHASILAN PUSAKA HUKUM']);
-            fputcsv($output, ['Tanggal laporan', now()->format('d/m/Y H:i')]);
-            fputcsv($output, []);
-            fputcsv($output, ['Indikator', 'Realisasi', 'Target', 'Satuan', 'Capaian (%)', 'Status', 'Sumber']);
+            $write(['LAPORAN INDIKATOR KEBERHASILAN PUSAKA HUKUM']);
+            $write(['Tanggal laporan', now()->format('d/m/Y H:i')]);
+            $write([]);
+            $write(['Indikator', 'Realisasi', 'Target', 'Satuan', 'Capaian (%)', 'Status', 'Sumber']);
 
             foreach ($metrics['indicators'] as $indicator) {
-                fputcsv($output, [
+                $write([
                     $indicator['label'],
                     $indicator['actual'],
                     $indicator['target'],
@@ -85,14 +87,27 @@ class KpiController extends Controller
                 ]);
             }
 
-            fputcsv($output, []);
-            fputcsv($output, ['Respons survei', $metrics['actuals']['survey_responses']]);
-            fputcsv($output, ['Dokumen diperbarui 30 hari terakhir', $metrics['actuals']['monthly_updates']]);
-            fputcsv($output, ['Admin ditunjuk', $target->appointed_admin_count]);
-            fputcsv($output, ['SOP tersedia', $target->sop_available ? 'Ya' : 'Belum']);
-            fputcsv($output, ['Panduan pengguna tersedia', $target->user_guide_available ? 'Ya' : 'Belum']);
-            fputcsv($output, ['Catatan verifikasi', $target->verification_notes]);
+            $write([]);
+            $write(['Respons survei', $metrics['actuals']['survey_responses']]);
+            $write(['Dokumen diperbarui 30 hari terakhir', $metrics['actuals']['monthly_updates']]);
+            $write(['Admin ditunjuk', $metrics['actuals']['appointed_admins']]);
+            $write(['SOP tersedia', $target->sop_available ? 'Ya' : 'Belum']);
+            $write(['Panduan pengguna tersedia', $target->user_guide_available ? 'Ya' : 'Belum']);
+            $write(['Catatan verifikasi', $target->verification_notes]);
             fclose($output);
         }, $filename, ['Content-Type' => 'text/csv; charset=UTF-8']);
+    }
+
+    /**
+     * Prefix values that start with a formula-triggering character so
+     * spreadsheet apps (Excel/LibreOffice) never interpret them as formulas.
+     */
+    private static function csvSafe(mixed $value): mixed
+    {
+        if (is_string($value) && preg_match('/^[=+\-@\t\r]/', $value)) {
+            return "'".$value;
+        }
+
+        return $value;
     }
 }

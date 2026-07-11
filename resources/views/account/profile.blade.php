@@ -5,6 +5,11 @@
 @section('content')
 <section class="py-5">
     <div class="container">
+        <nav class="breadcrumb">
+            <span class="breadcrumb-item"><a href="{{ route('home') }}">Beranda</a></span>
+            <span class="breadcrumb-item"><i data-lucide="chevron-right"></i></span>
+            <span class="breadcrumb-item active">Profil Saya</span>
+        </nav>
         <div class="mb-4">
             <h1 class="h3">Profil Saya</h1>
             <p class="text-muted mb-0">Kelola identitas akun dan keamanan password.</p>

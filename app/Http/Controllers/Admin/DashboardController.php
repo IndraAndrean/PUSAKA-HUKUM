@@ -32,7 +32,13 @@ class DashboardController extends Controller
             ];
         });
 
+        $currentMonth = $monthlyStatistics->last();
+        $previousMonth = $monthlyStatistics->slice(-2, 1)->first();
+
         return view('admin.dashboard', [
+            'documentsDelta' => $currentMonth['uploads'] - ($previousMonth['uploads'] ?? 0),
+            'viewsDelta' => $currentMonth['views'] - ($previousMonth['views'] ?? 0),
+            'downloadsDelta' => $currentMonth['downloads'] - ($previousMonth['downloads'] ?? 0),
             'totalDocuments' => Document::count(),
             'totalUsers' => User::count(),
             'totalArticles' => Article::count(),

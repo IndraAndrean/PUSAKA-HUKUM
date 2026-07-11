@@ -5,6 +5,7 @@
 @layer base {
     html {
         scroll-behavior: smooth;
+        color-scheme: light;
     }
 
     body {
@@ -713,6 +714,272 @@
     .admin-page-actions {
         @apply flex w-full flex-wrap justify-start gap-2 sm:w-auto sm:justify-end;
     }
+
+    /* Smart search & document navigation (Fase 1) */
+
+    .breadcrumb {
+        @apply mb-4 flex flex-wrap items-center gap-1.5 text-sm text-slate-500;
+    }
+
+    .breadcrumb-item {
+        @apply flex items-center gap-1.5;
+    }
+
+    .breadcrumb-item a {
+        @apply text-slate-500 no-underline hover:text-pusaka-navy;
+    }
+
+    .breadcrumb-item.active {
+        @apply max-w-[280px] truncate font-semibold text-pusaka-ink;
+    }
+
+    .breadcrumb-item .lucide {
+        @apply text-slate-300;
+    }
+
+    .search-toolbar {
+        @apply item-card flex flex-col gap-3 p-3 sm:flex-row sm:items-center;
+    }
+
+    .search-toolbar .form-control {
+        @apply sm:rounded-r-none;
+    }
+
+    .result-count {
+        @apply text-sm text-slate-500;
+    }
+
+    .result-count strong {
+        @apply text-pusaka-ink;
+    }
+
+    .filter-chip {
+        @apply inline-flex items-center gap-1.5 rounded-full border border-pusaka-teal/30 bg-teal-50 py-1 pl-3 pr-1.5 text-xs font-semibold text-pusaka-teal-dark no-underline;
+    }
+
+    .filter-chip:hover {
+        @apply border-pusaka-teal bg-teal-100 text-pusaka-teal-dark;
+    }
+
+    .filter-chip .lucide {
+        @apply h-3.5 w-3.5;
+    }
+
+    .filter-chip-clear {
+        @apply inline-flex items-center gap-1 text-xs font-semibold text-slate-500 no-underline hover:text-pusaka-red;
+    }
+
+    .facet-collapse {
+        @apply hidden lg:block;
+    }
+
+    .facet-collapse.show {
+        @apply block;
+    }
+
+    .facet-panel {
+        @apply item-card space-y-5 p-4;
+    }
+
+    .facet-group + .facet-group {
+        @apply mt-5 border-t border-pusaka-line pt-5;
+    }
+
+    .facet-group-title {
+        @apply mb-2 text-xs font-bold uppercase tracking-wide text-slate-400;
+    }
+
+    .facet-list {
+        @apply flex flex-col gap-0.5;
+    }
+
+    .facet-link {
+        @apply flex items-center justify-between gap-2 rounded-md px-2.5 py-1.5 text-sm text-slate-600 no-underline hover:bg-pusaka-soft hover:text-pusaka-navy;
+    }
+
+    .facet-link.active {
+        @apply bg-pusaka-teal/10 font-semibold text-pusaka-teal-dark;
+    }
+
+    .facet-link-count {
+        @apply rounded-full bg-slate-100 px-2 py-0.5 text-xs font-semibold text-slate-500;
+    }
+
+    .facet-link.active .facet-link-count {
+        @apply bg-pusaka-teal/20 text-pusaka-teal-dark;
+    }
+
+    .doc-card {
+        @apply item-card;
+    }
+
+    .doc-card-icon {
+        @apply inline-grid h-7 w-7 shrink-0 place-items-center rounded-md bg-pusaka-soft text-pusaka-teal-dark;
+    }
+
+    .doc-card-meta .lucide {
+        @apply h-3.5 w-3.5 text-slate-400;
+    }
+
+    .metadata-grid {
+        @apply grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-2;
+    }
+
+    .metadata-item-label {
+        @apply flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-slate-400;
+    }
+
+    .metadata-item-label .lucide {
+        @apply h-3.5 w-3.5;
+    }
+
+    .metadata-item-value {
+        @apply mt-1 text-sm text-pusaka-ink;
+    }
+
+    .empty-state {
+        @apply item-card flex flex-col items-center gap-3 px-6 py-14 text-center;
+    }
+
+    .empty-state-icon {
+        @apply inline-grid h-14 w-14 place-items-center rounded-full bg-pusaka-soft text-pusaka-teal-dark;
+    }
+
+    .related-docs {
+        @apply grid grid-cols-1 gap-3;
+    }
+
+    .pusaka-pagination-list {
+        @apply list-none p-0;
+    }
+
+    .pusaka-page-item {
+        @apply list-none;
+    }
+
+    .pusaka-page-link {
+        @apply grid h-9 min-w-9 place-items-center rounded-md border border-slate-200 px-2 text-sm text-slate-600 no-underline hover:border-pusaka-teal hover:text-pusaka-teal-dark;
+    }
+
+    .pusaka-page-item.active .pusaka-page-link {
+        @apply border-pusaka-teal bg-pusaka-teal text-white;
+    }
+
+    .pusaka-page-item.disabled .pusaka-page-link {
+        @apply cursor-not-allowed border-slate-100 text-slate-300 hover:border-slate-100 hover:text-slate-300;
+    }
+
+    /* Fase 2: knowledge center, FAQ, survey */
+
+    .article-body {
+        @apply space-y-4 whitespace-pre-line text-[15px] leading-8 text-slate-700;
+    }
+
+    .faq-category-group + .faq-category-group {
+        @apply mt-8;
+    }
+
+    .faq-category-title {
+        @apply mb-3 flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-pusaka-teal-dark;
+    }
+
+    .rating-scale {
+        @apply flex flex-wrap gap-2;
+    }
+
+    .rating-scale-input {
+        @apply sr-only;
+    }
+
+    .rating-scale-item {
+        @apply grid h-11 w-11 cursor-pointer place-items-center rounded-md border border-slate-300 text-sm font-semibold text-slate-600 transition hover:border-pusaka-teal hover:text-pusaka-teal-dark;
+    }
+
+    .rating-scale-input:checked + .rating-scale-item {
+        @apply border-pusaka-teal bg-pusaka-teal text-white;
+    }
+
+    .rating-scale-input:focus-visible + .rating-scale-item {
+        @apply ring-2 ring-pusaka-teal/40;
+    }
+
+    /* Fase 3: admin dashboard & KPI */
+
+    .stat-card {
+        @apply flex items-center gap-4 rounded-lg border border-pusaka-line bg-white p-4 shadow-panel;
+    }
+
+    .stat-card-icon {
+        @apply inline-grid h-12 w-12 shrink-0 place-items-center rounded-lg bg-pusaka-soft text-pusaka-teal-dark;
+    }
+
+    .stat-card-value {
+        @apply text-2xl font-bold leading-tight text-pusaka-ink;
+    }
+
+    .stat-card-label {
+        @apply text-sm text-slate-500;
+    }
+
+    .stat-trend {
+        @apply mt-1 inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-semibold;
+    }
+
+    .stat-trend .lucide {
+        @apply h-3.5 w-3.5;
+    }
+
+    .stat-trend.up {
+        @apply bg-emerald-50 text-emerald-700;
+    }
+
+    .stat-trend.down {
+        @apply bg-red-50 text-red-700;
+    }
+
+    .stat-trend.flat {
+        @apply bg-slate-100 text-slate-500;
+    }
+
+    .admin-section-title {
+        @apply mb-3 mt-6 flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-pusaka-navy;
+    }
+
+    .admin-section-title:first-child {
+        @apply mt-0;
+    }
+
+    .chart-legend {
+        @apply mt-4 flex flex-col gap-2;
+    }
+
+    .chart-legend-item {
+        @apply flex items-center justify-between gap-3 text-sm text-slate-600;
+    }
+
+    .chart-legend-dot {
+        @apply inline-block h-2.5 w-2.5 shrink-0 rounded-full;
+    }
+
+    .admin-nav-group-toggle {
+        @apply mt-1 flex min-h-10 w-full items-center justify-between gap-2 rounded-md px-3 py-2 text-sm text-white/70 hover:bg-white/10 hover:text-white;
+    }
+
+    .admin-nav-group-toggle i:first-child {
+        @apply w-5 text-center text-white/55;
+    }
+
+    .admin-nav-group-toggle .lucide:last-child {
+        @apply h-4 w-4 shrink-0 text-white/40 transition-transform duration-150;
+    }
+
+    .admin-nav-group-toggle:not(.collapsed) .lucide:last-child {
+        @apply rotate-180;
+    }
+
+    .admin-nav-group-toggle:not(.collapsed) {
+        @apply text-white;
+    }
 }
 
 @layer utilities {
@@ -851,6 +1118,7 @@
     .text-wrap { @apply whitespace-normal; }
     .text-nowrap { @apply whitespace-nowrap; }
     .text-truncate { @apply truncate; }
+    .text-truncate-3 { @apply line-clamp-3; }
     .font-monospace { @apply font-mono; }
     .rounded-2 { @apply rounded-lg; }
     .rounded-pill { @apply rounded-full; }

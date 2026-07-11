@@ -21,6 +21,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PublicArticleController;
 use App\Http\Controllers\PublicDigitalLibraryController;
 use App\Http\Controllers\PublicDocumentController;
+use App\Http\Controllers\PublicEducationMaterialController;
 use App\Http\Controllers\PublicFaqController;
 use App\Http\Controllers\SatisfactionSurveyController;
 use App\Http\Controllers\UserActivityController;
@@ -41,6 +42,7 @@ Route::get('/', HomeController::class)->name('home');
 Route::get('/profil-instansi', OrganizationProfileController::class)->name('organization-profile.show');
 Route::get('/dokumen', [PublicDocumentController::class, 'index'])->name('documents.index');
 Route::get('/perpustakaan', PublicDigitalLibraryController::class)->name('library.index');
+Route::get('/materi-penyuluhan', PublicEducationMaterialController::class)->name('education-materials.index');
 Route::get('/dokumen/{document}', [PublicDocumentController::class, 'show'])->name('documents.show');
 Route::get('/dokumen/{document}/preview', [PublicDocumentController::class, 'preview'])->name('documents.preview');
 Route::get('/dokumen/{document}/download', [PublicDocumentController::class, 'download'])->name('documents.download');
@@ -48,7 +50,12 @@ Route::get('/artikel', [PublicArticleController::class, 'index'])->name('article
 Route::get('/artikel/{article:slug}', [PublicArticleController::class, 'show'])->name('articles.show');
 Route::get('/faq', [PublicFaqController::class, 'index'])->name('faqs.index');
 Route::get('/konsultasi', [ConsultationController::class, 'create'])->name('consultation.create');
-Route::post('/konsultasi', [ConsultationController::class, 'store'])->name('consultation.store');
+Route::post('/konsultasi', [ConsultationController::class, 'store'])
+    ->middleware('throttle:5,1')
+    ->name('consultation.store');
+Route::get('/konsultasi/status', [ConsultationController::class, 'status'])
+    ->middleware('throttle:20,1')
+    ->name('consultation.status');
 Route::get('/survei-kepuasan', [SatisfactionSurveyController::class, 'create'])->name('surveys.create');
 Route::post('/survei-kepuasan', [SatisfactionSurveyController::class, 'store'])
     ->middleware('throttle:10,1')
@@ -59,7 +66,9 @@ Route::permanentRedirect('/perpustakaan-digital', '/perpustakaan')->name('legacy
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
-    Route::post('/login', [AuthController::class, 'login'])->name('login.store');
+    Route::post('/login', [AuthController::class, 'login'])
+        ->middleware('throttle:5,1')
+        ->name('login.store');
 });
 
 Route::post('/logout', [AuthController::class, 'logout'])
@@ -71,6 +80,7 @@ Route::middleware('auth')->group(function () {
     Route::put('/profil', [ProfileController::class, 'update'])->name('profile.update');
     Route::put('/profil/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
     Route::get('/aktivitas-saya', UserActivityController::class)->name('account.activity');
+    Route::get('/konsultasi-saya', [ConsultationController::class, 'mine'])->name('consultation.mine');
 });
 
 Route::middleware(['auth', 'role:super_admin,admin'])->prefix('admin')->name('admin.')->group(function () {

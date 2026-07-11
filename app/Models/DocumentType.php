@@ -30,9 +30,19 @@ class DocumentType extends Model
         return $query->where('collection', 'perpustakaan');
     }
 
+    public function scopeEducation($query)
+    {
+        return $query->where('collection', 'edukasi');
+    }
+
     public function isLibrary(): bool
     {
         return $this->collection === 'perpustakaan';
+    }
+
+    public function isEducation(): bool
+    {
+        return $this->collection === 'edukasi';
     }
 
     public function documents(): HasMany

@@ -5,6 +5,11 @@
 @section('content')
 <section class="hero py-5">
     <div class="container py-4">
+        <nav class="breadcrumb mb-3">
+            <span class="breadcrumb-item"><a class="text-white-50" href="{{ route('home') }}">Beranda</a></span>
+            <span class="breadcrumb-item"><i data-lucide="chevron-right" class="text-white-50"></i></span>
+            <span class="breadcrumb-item active text-white">Profil Instansi</span>
+        </nav>
         <div class="row align-items-center g-4">
             <div class="col-lg-9">
                 <p class="text-warning fw-semibold mb-2">{{ $profile->portal_full_name }}</p>

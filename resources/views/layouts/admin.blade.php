@@ -11,7 +11,7 @@
 <div class="admin-shell">
     <aside class="admin-sidebar">
         <div class="admin-sidebar-inner">
-            @include('layouts.partials.admin-navigation')
+            @include('layouts.partials.admin-navigation', ['idPrefix' => 'desktop'])
         </div>
     </aside>
 
@@ -63,7 +63,7 @@
         <button type="button" class="btn-close btn-close-white" data-ui-dismiss="offcanvas" aria-label="Tutup"></button>
     </div>
     <div class="offcanvas-body p-3">
-        @include('layouts.partials.admin-navigation')
+        @include('layouts.partials.admin-navigation', ['idPrefix' => 'mobile'])
     </div>
 </div>
 @stack('scripts')

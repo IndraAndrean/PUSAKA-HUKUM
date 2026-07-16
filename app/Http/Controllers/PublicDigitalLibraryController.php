@@ -17,15 +17,7 @@ class PublicDigitalLibraryController extends Controller
             ->whereHas('type', fn ($query) => $query->library())
             ->when($request->filled('q'), function ($query) use ($request) {
                 $keyword = $request->string('q')->toString();
-                $query->where(function ($inner) use ($keyword) {
-                    $inner->where('title', 'like', "%{$keyword}%")
-                        ->orWhere('author', 'like', "%{$keyword}%")
-                        ->orWhere('publisher', 'like', "%{$keyword}%")
-                        ->orWhere('isbn_issn', 'like', "%{$keyword}%")
-                        ->orWhere('keywords', 'like', "%{$keyword}%")
-                        ->orWhere('summary', 'like', "%{$keyword}%")
-                        ->orWhere('abstract', 'like', "%{$keyword}%");
-                });
+                $query->search($keyword);
             })
             ->when($request->filled('type'), fn ($query) => $query->where('document_type_id', $request->integer('type')))
             ->when($request->filled('category'), fn ($query) => $query->where('legal_category_id', $request->integer('category')))

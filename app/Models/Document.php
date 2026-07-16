@@ -11,6 +11,19 @@ class Document extends Model
 {
     use HasFactory;
 
+    public const STATUS_LABELS = [
+        'berlaku' => 'Berlaku',
+        'diubah' => 'Diubah',
+        'dicabut' => 'Dicabut',
+        'tidak_berlaku' => 'Tidak Berlaku',
+    ];
+
+    public const ACCESS_LEVEL_LABELS = [
+        'publik' => 'Publik',
+        'internal' => 'Internal',
+        'terbatas' => 'Terbatas',
+    ];
+
     protected $fillable = [
         'document_code',
         'title',
@@ -82,6 +95,62 @@ class Document extends Model
         return $query->whereIn('access_level', ['publik', 'internal']);
     }
 
+    public function scopeSearch(Builder $query, string $keyword): Builder
+    {
+        $keyword = trim($keyword);
+
+        if ($keyword === '') {
+            return $query;
+        }
+
+        $matchingStatuses = $this->matchingKeys(self::STATUS_LABELS, $keyword);
+        $matchingAccessLevels = $this->matchingKeys(self::ACCESS_LEVEL_LABELS, $keyword);
+        $matchingCollections = $this->matchingKeys(DocumentType::COLLECTIONS, $keyword);
+
+        return $query->where(function (Builder $inner) use (
+            $keyword,
+            $matchingStatuses,
+            $matchingAccessLevels,
+            $matchingCollections,
+        ) {
+            $inner->where('title', 'like', "%{$keyword}%")
+                ->orWhere('author', 'like', "%{$keyword}%")
+                ->orWhere('publisher', 'like', "%{$keyword}%")
+                ->orWhere('isbn_issn', 'like', "%{$keyword}%")
+                ->orWhere('edition_volume', 'like', "%{$keyword}%")
+                ->orWhere('document_code', 'like', "%{$keyword}%")
+                ->orWhere('document_number', 'like', "%{$keyword}%")
+                ->orWhere('year', 'like', "%{$keyword}%")
+                ->orWhere('issuing_institution', 'like', "%{$keyword}%")
+                ->orWhere('bidang_subbidang', 'like', "%{$keyword}%")
+                ->orWhere('keywords', 'like', "%{$keyword}%")
+                ->orWhere('summary', 'like', "%{$keyword}%")
+                ->orWhere('abstract', 'like', "%{$keyword}%")
+                ->orWhere('legal_basis', 'like', "%{$keyword}%")
+                ->orWhere('related_regulation', 'like', "%{$keyword}%")
+                ->orWhereHas('type', function (Builder $type) use ($keyword, $matchingCollections) {
+                    $type->where('name', 'like', "%{$keyword}%")
+                        ->orWhere('code_prefix', 'like', "%{$keyword}%")
+                        ->orWhere('description', 'like', "%{$keyword}%");
+
+                    if ($matchingCollections !== []) {
+                        $type->orWhereIn('collection', $matchingCollections);
+                    }
+                })
+                ->orWhereHas('category', fn (Builder $category) => $category
+                    ->where('name', 'like', "%{$keyword}%")
+                    ->orWhere('description', 'like', "%{$keyword}%"));
+
+            if ($matchingStatuses !== []) {
+                $inner->orWhereIn('document_status', $matchingStatuses);
+            }
+
+            if ($matchingAccessLevels !== []) {
+                $inner->orWhereIn('access_level', $matchingAccessLevels);
+            }
+        });
+    }
+
     public function getMetadataCompletenessAttribute(): int
     {
         if ($this->type?->isLibrary()) {
@@ -139,5 +208,18 @@ class Document extends Model
             ->filter()
             ->unique(fn ($keyword) => mb_strtolower($keyword))
             ->count();
+    }
+
+    private function matchingKeys(array $labels, string $keyword): array
+    {
+        $normalizedKeyword = mb_strtolower(str_replace('_', ' ', $keyword));
+
+        return collect($labels)
+            ->filter(function (string $label, string $key) use ($normalizedKeyword) {
+                return str_contains(mb_strtolower(str_replace('_', ' ', $key)), $normalizedKeyword)
+                    || str_contains(mb_strtolower($label), $normalizedKeyword);
+            })
+            ->keys()
+            ->all();
     }
 }

@@ -1,10 +1,10 @@
 @if ($paginator->hasPages())
-    <nav class="pusaka-pagination d-flex flex-wrap align-items-center justify-content-between gap-3" role="navigation" aria-label="Navigasi halaman">
-        <p class="small text-muted mb-0">
-            Menampilkan {{ $paginator->firstItem() }}–{{ $paginator->lastItem() }} dari {{ $paginator->total() }} dokumen
+    <nav class="pusaka-pagination" role="navigation" aria-label="Navigasi halaman">
+        <p class="pusaka-pagination-summary">
+            Menampilkan {{ $paginator->firstItem() }}-{{ $paginator->lastItem() }} dari {{ $paginator->total() }} data
         </p>
-        <ul class="pusaka-pagination-list d-flex flex-wrap align-items-center gap-1 mb-0">
-            {{-- Previous --}}
+
+        <ul class="pusaka-pagination-list">
             @if ($paginator->onFirstPage())
                 <li class="pusaka-page-item disabled"><span class="pusaka-page-link"><i data-lucide="arrow-left"></i></span></li>
             @else
@@ -27,7 +27,6 @@
                 @endif
             @endforeach
 
-            {{-- Next --}}
             @if ($paginator->hasMorePages())
                 <li class="pusaka-page-item"><a class="pusaka-page-link" href="{{ $paginator->nextPageUrl() }}" rel="next"><i data-lucide="arrow-right"></i></a></li>
             @else

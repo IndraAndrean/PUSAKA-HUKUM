@@ -11,7 +11,7 @@
 <div class="content-card p-3">
     <form method="get" class="row g-2 mb-3">
         <div class="col-md-10">
-            <input class="form-control" name="q" value="{{ request('q') }}" placeholder="Cari pertanyaan atau kategori">
+            <input class="form-control" name="q" value="{{ request('q') }}" placeholder="Cari pertanyaan, kategori, atau jawaban">
         </div>
         <div class="col-md-2 d-grid">
             <button class="btn btn-outline-secondary" type="submit"><i class="bi bi-search"></i> Cari</button>

@@ -21,13 +21,7 @@ class DocumentController extends Controller
         $documents = Document::with(['type', 'category', 'uploader'])
             ->when($request->filled('q'), function ($query) use ($request) {
                 $keyword = $request->string('q')->toString();
-                $query->where(function ($inner) use ($keyword) {
-                    $inner->where('title', 'like', "%{$keyword}%")
-                        ->orWhere('author', 'like', "%{$keyword}%")
-                        ->orWhere('isbn_issn', 'like', "%{$keyword}%")
-                        ->orWhere('document_code', 'like', "%{$keyword}%")
-                        ->orWhere('document_number', 'like', "%{$keyword}%");
-                });
+                $query->search($keyword);
             })
             ->when($request->filled('collection'), fn ($query) => $query
                 ->whereHas('type', fn ($type) => $type->where('collection', $request->string('collection')->toString())))

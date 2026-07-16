@@ -3,10 +3,6 @@
 @section('title', 'Tanggapi Konsultasi')
 @section('page_title', 'Tanggapi Konsultasi')
 
-@section('page_actions')
-    <a class="btn btn-outline-secondary" href="{{ route('admin.consultations.index') }}"><i class="bi bi-arrow-left"></i> Kembali</a>
-@endsection
-
 @section('content')
 <div class="row g-4">
     <div class="col-lg-5">
@@ -28,7 +24,8 @@
             @method('put')
             <div class="mb-3">
                 <label class="form-label" for="answer">Jawaban atau Rujukan Dokumen</label>
-                <textarea class="form-control" id="answer" name="answer" rows="10">{{ old('answer', $consultation->answer) }}</textarea>
+                <textarea class="form-control" id="answer" name="answer" rows="10" placeholder="Contoh: Berdasarkan dokumen Peraturan Kapolri Nomor ..., Bapak/Ibu dapat merujuk pada Pasal ... terkait ...">{{ old('answer', $consultation->answer) }}</textarea>
+                <div class="form-text">Berikan jawaban yang jelas, sertakan rujukan dokumen bila ada, dan hindari memuat data perkara atau informasi rahasia.</div>
             </div>
             <div class="mb-3">
                 <label class="form-label" for="status">Status</label>
@@ -37,6 +34,7 @@
                         <option value="{{ $value }}" @selected(old('status', $consultation->status) === $value)>{{ $label }}</option>
                     @endforeach
                 </select>
+                <div class="form-text">Gunakan Diproses saat masih ditelaah, Dijawab setelah tanggapan diberikan, dan Selesai jika tidak ada tindak lanjut.</div>
             </div>
             @if($consultation->answerer)
                 <p class="small text-muted">Terakhir dijawab oleh {{ $consultation->answerer->name }} pada {{ $consultation->answered_at?->format('d/m/Y H:i') }}.</p>

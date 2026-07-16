@@ -31,7 +31,7 @@
         <form method="get" class="search-toolbar mb-4">
             <div class="input-group flex-grow-1">
                 <span class="input-group-text bg-white"><i data-lucide="search"></i></span>
-                <input class="form-control" name="q" value="{{ request('q') }}" placeholder="Judul, penulis, ISBN, kata kunci">
+                <input class="form-control" name="q" value="{{ request('q') }}" placeholder="Judul, jenis, kategori, penulis, ISBN, kata kunci">
             </div>
             @if(request('type'))<input type="hidden" name="type" value="{{ request('type') }}">@endif
             @if(request('category'))<input type="hidden" name="category" value="{{ request('category') }}">@endif

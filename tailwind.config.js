@@ -9,8 +9,8 @@ export default {
         extend: {
             colors: {
                 pusaka: {
-                    navy: '#123247',
-                    deep: '#0b2536',
+                    navy: '#241ee8',
+                    deep: '#241ee8',
                     teal: '#14776d',
                     'teal-dark': '#0f625a',
                     gold: '#d3a72f',

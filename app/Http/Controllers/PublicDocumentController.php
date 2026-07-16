@@ -16,13 +16,6 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class PublicDocumentController extends Controller
 {
-    private const STATUSES = [
-        'berlaku' => 'Berlaku',
-        'diubah' => 'Diubah',
-        'dicabut' => 'Dicabut',
-        'tidak_berlaku' => 'Tidak Berlaku',
-    ];
-
     public function index(Request $request): View
     {
         $allCollections = $request->input('collection') === 'all';
@@ -48,7 +41,7 @@ class PublicDocumentController extends Controller
             return $category;
         });
 
-        $statusFacets = collect(self::STATUSES)->map(fn ($label, $value) => [
+        $statusFacets = collect(Document::STATUS_LABELS)->map(fn ($label, $value) => [
             'value' => $value,
             'label' => $label,
             'count' => $this->filteredQuery($request, $allCollections, ['status'])
@@ -85,16 +78,7 @@ class PublicDocumentController extends Controller
 
         if ($request->filled('q')) {
             $keyword = $request->string('q')->toString();
-            $query->where(function ($inner) use ($keyword) {
-                $inner->where('title', 'like', "%{$keyword}%")
-                    ->orWhere('author', 'like', "%{$keyword}%")
-                    ->orWhere('publisher', 'like', "%{$keyword}%")
-                    ->orWhere('isbn_issn', 'like', "%{$keyword}%")
-                    ->orWhere('document_number', 'like', "%{$keyword}%")
-                    ->orWhere('year', 'like', "%{$keyword}%")
-                    ->orWhere('keywords', 'like', "%{$keyword}%")
-                    ->orWhere('summary', 'like', "%{$keyword}%");
-            });
+            $query->search($keyword);
         }
 
         if (! in_array('type', $except, true) && $request->filled('type')) {

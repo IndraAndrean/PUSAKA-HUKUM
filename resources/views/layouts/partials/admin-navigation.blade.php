@@ -1,21 +1,22 @@
-<a class="admin-brand d-flex align-items-center gap-2 mb-3 text-white text-decoration-none" href="{{ route('admin.dashboard') }}">
-    @if($organizationProfile?->logo_url)
-        <img class="brand-logo" src="{{ $organizationProfile->logo_url }}" alt="Logo {{ $organizationProfile->organization_name }}">
-    @else
-        <span class="admin-brand-mark">PH</span>
-    @endif
-    <span class="admin-brand-copy">
-        <span class="d-block fw-bold text-truncate">{{ $organizationProfile?->portal_name ?? 'PUSAKA HUKUM' }}</span>
-        <small>Panel Administrasi</small>
-    </span>
-</a>
+<div class="admin-brand-wrap">
+    <a class="admin-brand d-flex align-items-center gap-2 text-decoration-none" href="{{ route('admin.dashboard') }}">
+        @if($organizationProfile?->logo_url)
+            <img class="brand-logo" src="{{ $organizationProfile->logo_url }}" alt="Logo {{ $organizationProfile->organization_name }}">
+        @else
+            <span class="admin-brand-mark">PH</span>
+        @endif
+        <span class="admin-brand-copy">
+            <span class="d-block fw-bold text-truncate">{{ $organizationProfile?->portal_name ?? 'PUSAKA HUKUM' }}</span>
+            <small>Panel Administrasi</small>
+        </span>
+    </a>
+</div>
 
 @php
     $dokumenActive = request()->routeIs('admin.documents.*', 'admin.document-imports.*', 'admin.document-types.*', 'admin.legal-categories.*');
     $kontenActive = request()->routeIs('admin.articles.*', 'admin.faqs.*', 'admin.consultations.*');
     $pemantauanActive = request()->routeIs('admin.audit-logs.*', 'admin.kpi.*', 'admin.organization-profile.*');
     $sistemActive = request()->routeIs('admin.users.*', 'admin.backups.*');
-    $akunActive = request()->routeIs('profile.edit', 'account.activity');
 @endphp
 
 <nav class="admin-nav nav flex-column">
@@ -89,26 +90,4 @@
         </div>
     @endif
 
-    <button class="admin-nav-group-toggle {{ $akunActive ? '' : 'collapsed' }}" type="button" data-ui-toggle="collapse" data-ui-target="#navGroupAkun{{ $idPrefix }}" aria-expanded="{{ $akunActive ? 'true' : 'false' }}" aria-controls="navGroupAkun{{ $idPrefix }}">
-        <span class="d-flex align-items-center gap-2"><i data-lucide="user"></i><span>Akun</span></span>
-        <i data-lucide="chevron-down" class="chevron"></i>
-    </button>
-    <div class="accordion-collapse {{ $akunActive ? 'show' : '' }}" id="navGroupAkun{{ $idPrefix }}">
-        <a class="nav-link {{ request()->routeIs('profile.edit') ? 'active' : '' }}" href="{{ route('profile.edit') }}">
-            <i data-lucide="user"></i><span>Profil Saya</span>
-        </a>
-        <a class="nav-link {{ request()->routeIs('account.activity') ? 'active' : '' }}" href="{{ route('account.activity') }}">
-            <i data-lucide="history"></i><span>Aktivitas Saya</span>
-        </a>
-    </div>
-
-    <a class="nav-link mt-2" href="{{ route('home') }}">
-        <i data-lucide="globe-2"></i><span>Lihat Portal</span>
-    </a>
-    <form action="{{ route('logout') }}" method="post">
-        @csrf
-        <button class="nav-link w-100 border-0 bg-transparent text-start" type="submit">
-            <i data-lucide="log-out"></i><span>Keluar</span>
-        </button>
-    </form>
 </nav>

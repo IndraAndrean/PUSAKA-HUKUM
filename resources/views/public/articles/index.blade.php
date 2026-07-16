@@ -19,7 +19,7 @@
         <form method="get" class="search-toolbar mb-4">
             <div class="input-group flex-grow-1">
                 <span class="input-group-text bg-white"><i data-lucide="search"></i></span>
-                <input class="form-control" name="q" value="{{ request('q') }}" placeholder="Cari judul atau isi artikel">
+                <input class="form-control" name="q" value="{{ request('q') }}" placeholder="Cari judul, kategori, atau isi artikel">
             </div>
             <select class="form-select" style="max-width: 220px;" name="category" onchange="this.form.submit()" aria-label="Filter kategori">
                 <option value="">Semua Kategori</option>

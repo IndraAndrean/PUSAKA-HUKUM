@@ -192,6 +192,38 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     createIcons({ icons: portalIcons });
+
+    const updateRequiredIndicators = () => {
+        document.querySelectorAll('.required-mark').forEach((mark) => mark.remove());
+
+        document.querySelectorAll('input[required], select[required], textarea[required]').forEach((control) => {
+            if (control.type === 'hidden' || control.disabled || !control.id) return;
+
+            const label = document.querySelector(`label[for="${CSS.escape(control.id)}"]`);
+            if (!label || label.querySelector('.required-mark')) return;
+
+            const mark = document.createElement('span');
+            mark.className = 'required-mark';
+            mark.textContent = '*';
+            mark.setAttribute('aria-hidden', 'true');
+            label.appendChild(mark);
+        });
+    };
+
+    updateRequiredIndicators();
+    window.Pusaka = { ...(window.Pusaka || {}), updateRequiredIndicators };
+
+    const requiredObserver = new MutationObserver((mutations) => {
+        if (mutations.some((mutation) => mutation.type === 'attributes' && mutation.attributeName === 'required')) {
+            updateRequiredIndicators();
+        }
+    });
+
+    requiredObserver.observe(document.body, {
+        attributes: true,
+        attributeFilter: ['required'],
+        subtree: true,
+    });
 });
 
 const closeElement = (element) => {
@@ -237,6 +269,9 @@ document.addEventListener('click', (event) => {
             target?.classList.toggle('show');
             toggle.classList.toggle('collapsed');
             toggle.setAttribute('aria-expanded', target?.classList.contains('show') ? 'true' : 'false');
+            if (target?.classList.contains('show')) {
+                target.querySelectorAll('.dropdown-menu.show').forEach((menu) => menu.classList.remove('show'));
+            }
             return;
         }
 

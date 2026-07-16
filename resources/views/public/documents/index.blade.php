@@ -41,7 +41,7 @@
 
             <div class="input-group flex-grow-1">
                 <span class="input-group-text bg-white"><i data-lucide="search"></i></span>
-                <input class="form-control" name="q" value="{{ request('q') }}" placeholder="Cari judul, nomor, penulis, atau kata kunci">
+                <input class="form-control" name="q" value="{{ request('q') }}" placeholder="Cari judul, jenis, kategori, status, tahun, atau kata kunci">
             </div>
 
             <select class="form-select" style="max-width: 190px;" name="sort" onchange="this.form.submit()" aria-label="Urutkan hasil">

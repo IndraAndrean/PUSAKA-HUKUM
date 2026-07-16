@@ -17,11 +17,7 @@ class PublicEducationMaterialController extends Controller
             ->whereHas('type', fn ($query) => $query->education())
             ->when($request->filled('q'), function ($query) use ($request) {
                 $keyword = $request->string('q')->toString();
-                $query->where(function ($inner) use ($keyword) {
-                    $inner->where('title', 'like', "%{$keyword}%")
-                        ->orWhere('keywords', 'like', "%{$keyword}%")
-                        ->orWhere('summary', 'like', "%{$keyword}%");
-                });
+                $query->search($keyword);
             })
             ->when($request->filled('category'), fn ($query) => $query->where('legal_category_id', $request->integer('category')))
             ->latest()

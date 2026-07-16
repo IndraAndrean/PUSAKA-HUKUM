@@ -15,6 +15,7 @@ class PublicArticleController extends Controller
                 $keyword = $request->string('q')->toString();
                 $query->where(function ($inner) use ($keyword) {
                     $inner->where('title', 'like', "%{$keyword}%")
+                        ->orWhere('category', 'like', "%{$keyword}%")
                         ->orWhere('excerpt', 'like', "%{$keyword}%")
                         ->orWhere('content', 'like', "%{$keyword}%");
                 });

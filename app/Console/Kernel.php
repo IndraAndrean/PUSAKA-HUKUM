@@ -15,6 +15,10 @@ class Kernel extends ConsoleKernel
         $schedule->command('backups:create --type=scheduled')
             ->dailyAt('01:30')
             ->withoutOverlapping();
+
+        $schedule->command('reminders:review-due')
+            ->weeklyOn(1, '08:00')
+            ->withoutOverlapping();
     }
 
     /**

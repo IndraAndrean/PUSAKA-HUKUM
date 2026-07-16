@@ -14,7 +14,7 @@
 <div class="content-card p-3">
     <form method="get" class="row g-2 mb-3">
         <div class="col-md-7">
-            <input class="form-control" name="q" value="{{ request('q') }}" placeholder="Cari kode, judul, penulis, ISBN, atau nomor">
+            <input class="form-control" name="q" value="{{ request('q') }}" placeholder="Cari kode, judul, jenis, kategori, status, penulis, ISBN, atau nomor">
         </div>
         <div class="col-md-3">
             <select class="form-select" name="collection">

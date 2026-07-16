@@ -3,10 +3,6 @@
 @section('title', 'Import Massal Dokumen')
 @section('page_title', 'Import Massal Dokumen')
 
-@section('page_actions')
-    <a class="btn btn-outline-secondary" href="{{ route('admin.documents.index') }}"><i class="bi bi-arrow-left"></i> Daftar Dokumen</a>
-@endsection
-
 @section('content')
 <div class="row g-4">
     <div class="col-xl-7">
@@ -24,7 +20,7 @@
                 <li class="mb-2">Isi satu dokumen pada setiap baris tanpa mengubah nama kolom.</li>
                 <li class="mb-2">Gunakan format tanggal <code>YYYY-MM-DD</code>, misalnya <code>2026-06-11</code>.</li>
                 <li class="mb-2">Masukkan minimal tiga kata kunci yang dipisahkan koma.</li>
-                <li>Satukan seluruh PDF ke satu file ZIP. Nama PDF harus sama persis dengan kolom <code>nama_file_pdf</code>.</li>
+                <li>Satukan seluruh PDF ke satu file ZIP. Nama PDF harus sama persis dengan kolom <code>nama_file_pdf</code>, misalnya <code>PERKAP_6_2023_PENYIDIKAN.pdf</code>.</li>
             </ol>
         </div>
 
@@ -34,18 +30,20 @@
             <div class="mb-3">
                 <label class="form-label fw-semibold" for="spreadsheet">Spreadsheet dokumen</label>
                 <input class="form-control @error('spreadsheet') is-invalid @enderror" id="spreadsheet" name="spreadsheet" type="file" accept=".csv,.xlsx" required>
-                <div class="form-text">Format CSV atau XLSX, maksimal 10 MB dan 500 baris.</div>
+                <div class="form-text">Format CSV atau XLSX, maksimal 10 MB dan 500 baris. Gunakan template agar kolom metadata sesuai standar PUSAKA HUKUM.</div>
                 @error('spreadsheet')<div class="invalid-feedback">{{ $message }}</div>@enderror
             </div>
             <div class="mb-4">
                 <label class="form-label fw-semibold" for="pdf_archive">Arsip PDF</label>
                 <input class="form-control @error('pdf_archive') is-invalid @enderror" id="pdf_archive" name="pdf_archive" type="file" accept=".zip,application/zip" required>
-                <div class="form-text">Format ZIP maksimal 1 GB. Setiap PDF maksimal 20 MB.</div>
+                <div class="form-text">Format ZIP maksimal 1 GB. Setiap PDF maksimal 20 MB dan hanya berisi file yang dirujuk pada spreadsheet.</div>
                 @error('pdf_archive')<div class="invalid-feedback">{{ $message }}</div>@enderror
             </div>
-            <button class="btn btn-primary" type="submit">
-                <i class="bi bi-cloud-arrow-up"></i> Mulai Import
-            </button>
+            <div class="d-flex justify-content-end">
+                <button class="btn btn-primary" type="submit">
+                    <i class="bi bi-cloud-arrow-up"></i> Mulai Import
+                </button>
+            </div>
         </form>
     </div>
 

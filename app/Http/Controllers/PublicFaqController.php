@@ -15,6 +15,7 @@ class PublicFaqController extends Controller
                 $keyword = $request->string('q')->toString();
                 $query->where(function ($inner) use ($keyword) {
                     $inner->where('question', 'like', "%{$keyword}%")
+                        ->orWhere('category', 'like', "%{$keyword}%")
                         ->orWhere('answer', 'like', "%{$keyword}%");
                 });
             })

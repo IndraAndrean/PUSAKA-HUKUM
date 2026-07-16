@@ -18,6 +18,7 @@ class FaqController extends Controller
                 $keyword = $request->string('q')->toString();
                 $query->where(function ($inner) use ($keyword) {
                     $inner->where('question', 'like', "%{$keyword}%")
+                        ->orWhere('answer', 'like', "%{$keyword}%")
                         ->orWhere('category', 'like', "%{$keyword}%");
                 });
             })

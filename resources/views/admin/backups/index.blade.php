@@ -163,7 +163,7 @@
                         <div class="modal-body">
                             <p>Database dan dokumen aktif akan diganti dengan isi <strong>{{ $backup->filename }}</strong>.</p>
                             <div class="mb-3">
-                                <label class="form-label" for="restore-password-{{ $backup->id }}">Password saat ini</label>
+                                <label class="form-label" for="restore-password-{{ $backup->id }}">Kata Sandi saat ini</label>
                                 <input class="form-control" id="restore-password-{{ $backup->id }}" name="current_password" type="password" autocomplete="current-password" required>
                             </div>
                             <div>
@@ -192,7 +192,7 @@
                         </div>
                         <div class="modal-body">
                             <p>Arsip <strong>{{ $backup->filename }}</strong> akan dihapus permanen.</p>
-                            <label class="form-label" for="delete-password-{{ $backup->id }}">Password saat ini</label>
+                            <label class="form-label" for="delete-password-{{ $backup->id }}">Kata Sandi saat ini</label>
                             <input class="form-control" id="delete-password-{{ $backup->id }}" name="current_password" type="password" autocomplete="current-password" required>
                         </div>
                         <div class="modal-footer">

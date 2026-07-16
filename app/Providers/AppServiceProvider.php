@@ -13,6 +13,7 @@ use App\Models\OrganizationProfile;
 use App\Models\User;
 use App\Observers\AuditableObserver;
 use Illuminate\Support\Facades\View;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -30,6 +31,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Paginator::defaultView('vendor.pagination.pusaka');
+        Paginator::defaultSimpleView('vendor.pagination.pusaka');
+
         foreach ([
             Document::class,
             DocumentType::class,
@@ -45,7 +49,7 @@ class AppServiceProvider extends ServiceProvider
         }
 
         $profile = null;
-        View::composer(['layouts.app', 'layouts.admin', 'public.*'], function ($view) use (&$profile) {
+        View::composer(['layouts.app', 'layouts.admin', 'public.*', 'auth.*'], function ($view) use (&$profile) {
             $profile ??= OrganizationProfile::current();
             $view->with('organizationProfile', $profile);
         });

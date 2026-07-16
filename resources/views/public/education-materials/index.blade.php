@@ -28,7 +28,7 @@
         <form method="get" class="search-toolbar mb-4">
             <div class="input-group flex-grow-1">
                 <span class="input-group-text bg-white"><i data-lucide="search"></i></span>
-                <input class="form-control" name="q" value="{{ request('q') }}" placeholder="Judul, kata kunci">
+                <input class="form-control" name="q" value="{{ request('q') }}" placeholder="Judul, kategori, jenis, atau kata kunci">
             </div>
             @if(request('category'))<input type="hidden" name="category" value="{{ request('category') }}">@endif
             <button class="btn btn-pusaka" type="submit"><i data-lucide="search"></i> Cari</button>

@@ -19,7 +19,7 @@
         <form method="get" class="search-toolbar mb-4">
             <div class="input-group flex-grow-1">
                 <span class="input-group-text bg-white"><i data-lucide="search"></i></span>
-                <input class="form-control" name="q" value="{{ request('q') }}" placeholder="Cari pertanyaan atau jawaban">
+                <input class="form-control" name="q" value="{{ request('q') }}" placeholder="Cari pertanyaan, kategori, atau jawaban">
             </div>
             <button class="btn btn-pusaka" type="submit"><i data-lucide="search"></i> Cari</button>
             @if(request()->filled('q'))

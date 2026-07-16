@@ -8,7 +8,7 @@
     @stack('styles')
 </head>
 <body>
-<nav class="navbar navbar-expand-xl navbar-dark topbar public-navbar sticky-top">
+<nav class="navbar navbar-expand-xl topbar public-navbar sticky-top">
     <div class="container">
         <a class="navbar-brand d-flex align-items-center gap-2" href="{{ route('home') }}">
             @if($organizationProfile?->logo_url)
@@ -18,7 +18,7 @@
             @endif
             <span class="brand-copy">
                 <span class="d-block fw-bold lh-sm">{{ $organizationProfile?->portal_name ?? 'PUSAKA HUKUM' }}</span>
-                <small class="text-white-50">{{ $organizationProfile?->organization_name ?? 'Bidang Hukum Polda Lampung' }}</small>
+                <small>{{ $organizationProfile?->organization_name ?? 'Bidang Hukum Polda Lampung' }}</small>
             </span>
         </a>
         <button class="navbar-toggler" type="button" data-ui-toggle="collapse" data-ui-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Buka navigasi">
@@ -45,7 +45,7 @@
                         <li class="nav-item ms-xl-2"><a class="btn btn-sm btn-warning" href="{{ route('admin.dashboard') }}"><i class="bi bi-grid-1x2 me-1"></i> Admin</a></li>
                     @endif
                     <li class="nav-item dropdown">
-                        <button class="btn btn-sm btn-outline-light dropdown-toggle" type="button" data-ui-toggle="dropdown" aria-expanded="false" title="Menu akun">
+                        <button class="btn btn-sm btn-outline-primary dropdown-toggle" type="button" data-ui-toggle="dropdown" aria-expanded="false" title="Menu akun">
                             <i class="bi bi-person-circle me-1"></i> {{ str(auth()->user()->name)->before(' ') }}
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end">
@@ -62,7 +62,7 @@
                         </ul>
                     </li>
                 @else
-                    <li class="nav-item ms-xl-2"><a class="btn btn-sm btn-outline-light" href="{{ route('login') }}"><i class="bi bi-box-arrow-in-right me-1"></i> Masuk</a></li>
+                    <li class="nav-item ms-xl-2"><a class="btn btn-sm btn-primary" href="{{ route('login') }}"><i class="bi bi-box-arrow-in-right me-1"></i> Masuk</a></li>
                 @endauth
             </ul>
         </div>

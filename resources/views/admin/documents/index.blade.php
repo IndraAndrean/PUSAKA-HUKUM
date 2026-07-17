@@ -38,7 +38,7 @@
                 <th>Kualitas Metadata</th>
                 <th>Akses</th>
                 <th>Status</th>
-                <th class="text-end">Aksi</th>
+                <th class="text-end admin-table-actions-column">Aksi</th>
             </tr>
             </thead>
             <tbody>
@@ -62,14 +62,16 @@
                     </td>
                     <td><span class="badge text-bg-light">{{ ucfirst($document->access_level) }}</span></td>
                     <td>{{ str_replace('_', ' ', ucfirst($document->document_status)) }}</td>
-                    <td class="text-end">
-                        <a class="btn btn-sm btn-outline-secondary" href="{{ route('documents.show', $document) }}" target="_blank"><i class="bi bi-eye"></i></a>
-                        <a class="btn btn-sm btn-outline-primary" href="{{ route('admin.documents.edit', $document) }}"><i class="bi bi-pencil"></i></a>
-                        <form action="{{ route('admin.documents.destroy', $document) }}" method="post" class="d-inline" onsubmit="return confirm('Hapus dokumen ini?')">
-                            @csrf
-                            @method('delete')
-                            <button class="btn btn-sm btn-outline-danger" type="submit"><i class="bi bi-trash"></i></button>
-                        </form>
+                    <td class="admin-table-actions-column">
+                        <div class="admin-table-actions">
+                            <a class="btn btn-sm btn-outline-secondary btn-icon" href="{{ route('documents.show', $document) }}" target="_blank" title="Lihat dokumen" aria-label="Lihat dokumen"><i class="bi bi-eye"></i></a>
+                            <a class="btn btn-sm btn-outline-primary btn-icon" href="{{ route('admin.documents.edit', $document) }}" title="Edit dokumen" aria-label="Edit dokumen"><i class="bi bi-pencil"></i></a>
+                            <form action="{{ route('admin.documents.destroy', $document) }}" method="post" onsubmit="return confirm('Hapus dokumen ini?')">
+                                @csrf
+                                @method('delete')
+                                <button class="btn btn-sm btn-outline-danger btn-icon" type="submit" title="Hapus dokumen" aria-label="Hapus dokumen"><i class="bi bi-trash"></i></button>
+                            </form>
+                        </div>
                     </td>
                 </tr>
             @empty

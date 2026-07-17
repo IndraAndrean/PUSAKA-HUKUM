@@ -438,6 +438,22 @@
         @apply px-2 py-2;
     }
 
+    .admin-table-actions-column {
+        @apply w-36 min-w-36;
+    }
+
+    .admin-table-actions {
+        @apply flex flex-nowrap items-center justify-end gap-1;
+    }
+
+    .admin-table-actions form {
+        @apply m-0;
+    }
+
+    .admin-table-actions .btn-icon {
+        @apply h-9 w-9 shrink-0;
+    }
+
     .alert {
         @apply rounded-lg border px-4 py-3 text-sm;
     }

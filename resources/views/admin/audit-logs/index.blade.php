@@ -23,12 +23,6 @@
             <div class="fs-3 fw-semibold text-danger">{{ $summary['deletions'] }}</div>
         </div>
     </div>
-    <div class="col-sm-6 col-xl-3">
-        <div class="metric p-3 h-100">
-            <div class="text-muted">Import 30 Hari</div>
-            <div class="fs-3 fw-semibold text-primary">{{ $summary['imports'] }}</div>
-        </div>
-    </div>
 </div>
 
 <div class="content-card p-3 mb-4">

@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Models\Article;
 use App\Models\Consultation;
 use App\Models\Document;
+use App\Models\DocumentDivision;
 use App\Models\DocumentType;
 use App\Models\Faq;
 use App\Models\KpiTarget;
@@ -36,6 +37,7 @@ class AppServiceProvider extends ServiceProvider
 
         foreach ([
             Document::class,
+            DocumentDivision::class,
             DocumentType::class,
             LegalCategory::class,
             Article::class,

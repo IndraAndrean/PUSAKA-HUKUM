@@ -77,6 +77,11 @@ class Document extends Model
         return $this->belongsTo(LegalCategory::class, 'legal_category_id');
     }
 
+    public function division(): BelongsTo
+    {
+        return $this->belongsTo(DocumentDivision::class, 'bidang_subbidang', 'code');
+    }
+
     public function uploader(): BelongsTo
     {
         return $this->belongsTo(User::class, 'uploaded_by');
@@ -139,6 +144,10 @@ class Document extends Model
                 })
                 ->orWhereHas('category', fn (Builder $category) => $category
                     ->where('name', 'like', "%{$keyword}%")
+                    ->orWhere('description', 'like', "%{$keyword}%"))
+                ->orWhereHas('division', fn (Builder $division) => $division
+                    ->where('name', 'like', "%{$keyword}%")
+                    ->orWhere('code', 'like', "%{$keyword}%")
                     ->orWhere('description', 'like', "%{$keyword}%"));
 
             if ($matchingStatuses !== []) {
@@ -153,14 +162,13 @@ class Document extends Model
 
     public function getMetadataCompletenessAttribute(): int
     {
-        if ($this->type?->isLibrary()) {
+        if ($this->type?->isLibrary() || $this->type?->isEducation()) {
             $checks = [
                 filled($this->document_code),
                 filled($this->title),
                 filled($this->author),
                 filled($this->document_type_id),
                 filled($this->year),
-                filled($this->publisher),
                 filled($this->legal_category_id),
                 filled($this->bidang_subbidang),
                 $this->keywordCount() >= 3,
@@ -171,6 +179,10 @@ class Document extends Model
                 filled($this->created_at),
                 filled($this->file_path),
             ];
+
+            if ($this->type?->isLibrary()) {
+                $checks[] = filled($this->publisher);
+            }
 
             return (int) round((collect($checks)->filter()->count() / count($checks)) * 100);
         }

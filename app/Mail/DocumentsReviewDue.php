@@ -18,7 +18,7 @@ class DocumentsReviewDue extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: $this->documents->count()." dokumen jatuh tempo tinjau ulang — PUSAKA HUKUM",
+            subject: $this->documents->count()." dokumen jatuh tempo tinjau ulang — SIPAKEM",
         );
     }
 

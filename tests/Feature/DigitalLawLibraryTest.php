@@ -61,11 +61,11 @@ class DigitalLawLibraryTest extends TestCase
         Storage::fake('documents');
 
         $admin = $this->user('admin');
-        $type = $this->type('Naskah Akademik Uji', 'NA-UJI', 'perpustakaan');
+        $type = $this->type('Kajian Hukum Uji', 'KAJ-UJI', 'perpustakaan');
         $category = $this->category();
 
         $this->actingAs($admin)->post(route('admin.documents.store'), [
-            'title' => 'Naskah Akademik Transformasi Hukum',
+            'title' => 'Kajian Transformasi Pelayanan Hukum',
             'author' => 'Tim Kajian Bidkum',
             'document_type_id' => $type->id,
             'document_number' => '',
@@ -80,14 +80,14 @@ class DigitalLawLibraryTest extends TestCase
             'legal_category_id' => $category->id,
             'bidang_subbidang' => 'kum',
             'keywords' => 'transformasi, hukum, kepolisian',
-            'summary' => 'Naskah akademik untuk pengembangan transformasi pelayanan hukum.',
-            'abstract' => 'Kajian akademik mengenai transformasi pelayanan hukum.',
+            'summary' => 'Kajian hukum untuk pengembangan transformasi pelayanan hukum.',
+            'abstract' => 'Kajian mengenai transformasi pelayanan hukum.',
             'document_version' => '1.0',
             'access_level' => 'internal',
-            'file' => UploadedFile::fake()->create('naskah.pdf', 100, 'application/pdf'),
+            'file' => UploadedFile::fake()->create('kajian.pdf', 100, 'application/pdf'),
         ])->assertRedirect(route('admin.documents.index'));
 
-        $document = Document::where('title', 'Naskah Akademik Transformasi Hukum')->firstOrFail();
+        $document = Document::where('title', 'Kajian Transformasi Pelayanan Hukum')->firstOrFail();
 
         $this->assertNull($document->document_number);
         $this->assertNull($document->enacted_date);

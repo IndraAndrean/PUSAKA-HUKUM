@@ -5,21 +5,18 @@
 
 @section('content')
 <div class="content-card p-3">
-    <form method="get" class="row g-2 mb-3">
-        <div class="col-md-8">
+    <form method="get" class="search-toolbar mb-3">
+        <div class="input-group flex-grow-1">
+            <span class="input-group-text"><i data-lucide="search"></i></span>
             <input class="form-control" name="q" value="{{ request('q') }}" placeholder="Cari nama, email, atau isi pertanyaan">
         </div>
-        <div class="col-md-2">
-            <select class="form-select" name="status">
-                <option value="">Semua status</option>
-                @foreach(['masuk' => 'Masuk', 'diproses' => 'Diproses', 'dijawab' => 'Dijawab', 'selesai' => 'Selesai'] as $value => $label)
-                    <option value="{{ $value }}" @selected(request('status') === $value)>{{ $label }}</option>
-                @endforeach
-            </select>
-        </div>
-        <div class="col-md-2 d-grid">
-            <button class="btn btn-outline-secondary" type="submit"><i class="bi bi-search"></i> Filter</button>
-        </div>
+        <select class="form-select" name="status" aria-label="Filter status konsultasi">
+            <option value="">Semua status</option>
+            @foreach(['masuk' => 'Masuk', 'diproses' => 'Diproses', 'dijawab' => 'Dijawab', 'selesai' => 'Selesai'] as $value => $label)
+                <option value="{{ $value }}" @selected(request('status') === $value)>{{ $label }}</option>
+            @endforeach
+        </select>
+        <button class="btn btn-outline-secondary" type="submit"><i data-lucide="filter"></i> Filter</button>
     </form>
     <div class="table-responsive">
         <table class="table align-middle">

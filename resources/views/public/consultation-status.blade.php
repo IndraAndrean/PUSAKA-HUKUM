@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Cek Status Konsultasi - PUSAKA HUKUM')
+@section('title', 'Cek Status Konsultasi - SIPAKEM')
 
 @section('content')
 <section class="py-5">
@@ -18,12 +18,12 @@
                 <div class="item-card p-4 mb-4">
                     <h1 class="h4">Cek Status Konsultasi</h1>
                     <p class="text-muted small">Masukkan kode pelacakan yang Anda terima saat mengirim pertanyaan konsultasi.</p>
-                    <form method="get" action="{{ route('consultation.status') }}">
-                        <div class="input-group">
-                            <span class="input-group-text bg-white"><i data-lucide="search"></i></span>
+                    <form method="get" action="{{ route('consultation.status') }}" class="search-toolbar search-toolbar-compact">
+                        <div class="input-group flex-grow-1">
+                            <span class="input-group-text"><i data-lucide="search"></i></span>
                             <input class="form-control font-monospace" style="text-transform: uppercase;" name="tracking_code" value="{{ request('tracking_code') }}" placeholder="Contoh: KH-7X9K2M" required>
-                            <button class="btn btn-pusaka" type="submit">Cek</button>
                         </div>
+                        <button class="btn btn-pusaka" type="submit"><i data-lucide="search-check"></i> Cek</button>
                     </form>
                 </div>
 

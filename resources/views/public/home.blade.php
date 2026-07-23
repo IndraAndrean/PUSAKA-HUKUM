@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', ($organizationProfile?->portal_name ?? 'PUSAKA HUKUM').' - '.$organizationProfile?->organization_name)
+@section('title', ($organizationProfile?->portal_name ?? 'SIPAKEM').' - '.($organizationProfile?->organization_name ?? 'Bidang Hukum dan HAM Polda Lampung'))
 
 @section('content')
 <section class="hero">
@@ -8,14 +8,14 @@
         <div class="row align-items-center g-4">
             <div class="col-xl-9">
                 <p class="hero-eyebrow mb-3">{{ $organizationProfile?->eyebrow ?? $organizationProfile?->portal_full_name }}</p>
-                <h1 class="hero-title mb-3">{{ $organizationProfile?->portal_name ?? 'PUSAKA HUKUM' }}</h1>
+                <h1 class="hero-title mb-3">{{ $organizationProfile?->portal_name ?? 'SIPAKEM' }}</h1>
                 <p class="lead mb-2">{{ $organizationProfile?->tagline ?? 'Satu Akses untuk Semua Pengetahuan Hukum' }}</p>
                 <p class="hero-copy mb-4">{{ $organizationProfile?->hero_description }}</p>
                 <form action="{{ route('documents.index') }}" method="get" class="hero-search p-2">
                     <input type="hidden" name="collection" value="all">
                     <div class="input-group input-group-lg">
-                        <span class="input-group-text bg-white border-0"><i class="bi bi-search"></i></span>
-                        <input class="form-control border-0" name="q" aria-label="Cari dokumen hukum" placeholder="Cari judul, nomor, penulis, atau kata kunci">
+                        <span class="input-group-text"><i class="bi bi-search"></i></span>
+                        <input class="form-control" name="q" aria-label="Cari dokumen hukum" placeholder="Cari judul, nomor, penulis, atau kata kunci">
                         <button class="btn btn-warning px-4" type="submit"><i class="bi bi-search me-1"></i> Cari</button>
                     </div>
                 </form>
@@ -56,7 +56,7 @@
             @foreach($libraryTypes as $type)
                 <div class="col-6 col-lg-3">
                     <a class="item-card p-3 d-block text-decoration-none text-dark h-100" href="{{ route('library.index', ['type' => $type->id]) }}">
-                        <i class="bi bi-book text-success fs-4"></i>
+                        <i class="bi bi-book text-primary fs-4"></i>
                         <div class="fw-semibold mt-2">{{ $type->name }}</div>
                         <div class="small text-muted">{{ $type->documents_count }} koleksi</div>
                     </a>

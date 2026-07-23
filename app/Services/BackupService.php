@@ -18,7 +18,7 @@ class BackupService
     public function create(?User $user = null, string $type = 'manual'): Backup
     {
         $this->ensureMysqlConnection();
-        $filename = 'PUSAKA_HUKUM_'.now()->format('Ymd_His').'_'.Str::lower(Str::random(6)).'.zip';
+        $filename = 'SIPAKEM_'.now()->format('Ymd_His').'_'.Str::lower(Str::random(6)).'.zip';
         $diskPath = trim(config('backup.directory'), '/').'/'.$filename;
         $backup = Backup::create([
             'created_by' => $user?->id,
@@ -37,7 +37,7 @@ class BackupService
             [$documents, $documentBytes] = $this->filesFromDisk('documents', 'documents');
             [$branding, $brandingBytes] = $this->filesFromDisk('public', 'branding');
             $manifest = [
-                'application' => 'PUSAKA HUKUM',
+                'application' => 'SIPAKEM',
                 'format_version' => 1,
                 'created_at' => now()->toIso8601String(),
                 'database' => config('database.connections.mysql.database'),
@@ -418,7 +418,7 @@ class BackupService
     {
         if (
             ! is_array($manifest)
-            || ($manifest['application'] ?? null) !== 'PUSAKA HUKUM'
+            || ($manifest['application'] ?? null) !== 'SIPAKEM'
             || (int) ($manifest['format_version'] ?? 0) !== 1
             || ($manifest['database_dump'] ?? null) !== 'database.sql'
             || ($manifest['database'] ?? null) !== $this->databaseConfig('database')

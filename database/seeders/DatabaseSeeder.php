@@ -20,9 +20,9 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $superAdmin = User::updateOrCreate(
-            ['email' => 'superadmin@pusakahukum.test'],
+            ['email' => 'superadmin@sipakem.test'],
             [
-                'name' => 'Super Admin PUSAKA',
+                'name' => 'Super Admin SIPAKEM',
                 'password' => Hash::make('password'),
                 'role' => 'super_admin',
                 'is_active' => true,
@@ -30,7 +30,7 @@ class DatabaseSeeder extends Seeder
         );
 
         User::updateOrCreate(
-            ['email' => 'admin@pusakahukum.test'],
+            ['email' => 'admin@sipakem.test'],
             [
                 'name' => 'Admin Pengelola',
                 'password' => Hash::make('password'),
@@ -40,7 +40,7 @@ class DatabaseSeeder extends Seeder
         );
 
         User::updateOrCreate(
-            ['email' => 'internal@pusakahukum.test'],
+            ['email' => 'internal@sipakem.test'],
             [
                 'name' => 'User Internal',
                 'password' => Hash::make('password'),
@@ -54,18 +54,16 @@ class DatabaseSeeder extends Seeder
             ['name' => 'Peraturan Pemerintah', 'code_prefix' => 'REG-PP', 'review_interval_months' => 3, 'collection' => 'produk_hukum'],
             ['name' => 'Peraturan Presiden', 'code_prefix' => 'REG-PERPRES', 'review_interval_months' => 3, 'collection' => 'produk_hukum'],
             ['name' => 'Peraturan Kapolri', 'code_prefix' => 'POL-PERKAP', 'review_interval_months' => 3, 'collection' => 'produk_hukum'],
+            ['name' => 'Peraturan Kapolda', 'code_prefix' => 'PERKAPOLDA', 'review_interval_months' => 3, 'collection' => 'produk_hukum'],
+            ['name' => 'Keputusan Kabidkum', 'code_prefix' => 'KEP-KABIDKUM', 'review_interval_months' => 3, 'collection' => 'produk_hukum'],
             ['name' => 'Surat Edaran', 'code_prefix' => 'SE', 'review_interval_months' => 3, 'collection' => 'produk_hukum'],
             ['name' => 'Petunjuk Pelaksanaan', 'code_prefix' => 'JUKLAK', 'review_interval_months' => 3, 'collection' => 'produk_hukum'],
             ['name' => 'Petunjuk Teknis', 'code_prefix' => 'JUKNIS', 'review_interval_months' => 3, 'collection' => 'produk_hukum'],
             ['name' => 'Kajian Hukum', 'code_prefix' => 'KAJ', 'review_interval_months' => 6, 'collection' => 'perpustakaan'],
-            ['name' => 'Legal Opinion', 'code_prefix' => 'LO', 'review_interval_months' => 0, 'collection' => 'perpustakaan'],
             ['name' => 'Materi Penyuluhan', 'code_prefix' => 'SUNLUH', 'review_interval_months' => 6, 'collection' => 'edukasi'],
             ['name' => 'Buku Hukum', 'code_prefix' => 'LIB-BUKU', 'review_interval_months' => 12, 'collection' => 'perpustakaan'],
             ['name' => 'Jurnal Hukum', 'code_prefix' => 'LIB-JURNAL', 'review_interval_months' => 12, 'collection' => 'perpustakaan'],
-            ['name' => 'Naskah Akademik', 'code_prefix' => 'LIB-NA', 'review_interval_months' => 12, 'collection' => 'perpustakaan'],
-            ['name' => 'Yurisprudensi', 'code_prefix' => 'LIB-YURIS', 'review_interval_months' => 6, 'collection' => 'perpustakaan'],
             ['name' => 'Putusan Praperadilan', 'code_prefix' => 'PRAP', 'review_interval_months' => 6, 'collection' => 'perpustakaan'],
-            ['name' => 'Telaahan Hukum', 'code_prefix' => 'TEL', 'review_interval_months' => 6, 'collection' => 'perpustakaan'],
             ['name' => 'Best Practice Hukum', 'code_prefix' => 'LIB-BP', 'review_interval_months' => 12, 'collection' => 'perpustakaan'],
         ];
         foreach ($types as $type) {
@@ -87,7 +85,7 @@ class DatabaseSeeder extends Seeder
         $category = LegalCategory::where('slug', 'administrasi')->first();
 
         Document::updateOrCreate(
-            ['document_code' => 'PUSAKA-0001'],
+            ['document_code' => 'SIPAKEM-0001'],
             [
                 'title' => 'Contoh Produk Hukum Internal',
                 'document_type_id' => $type?->id,
@@ -97,19 +95,19 @@ class DatabaseSeeder extends Seeder
                 'document_status' => 'berlaku',
                 'legal_category_id' => $category?->id,
                 'keywords' => 'contoh, hukum, internal',
-                'summary' => 'Contoh data awal untuk demonstrasi daftar dokumen PUSAKA HUKUM.',
+                'summary' => 'Contoh data awal untuk demonstrasi daftar dokumen SIPAKEM.',
                 'access_level' => 'internal',
                 'uploaded_by' => $superAdmin->id,
             ]
         );
 
         Article::updateOrCreate(
-            ['slug' => 'mengenal-pusaka-hukum'],
+            ['slug' => 'mengenal-sipakem'],
             [
-                'title' => 'Mengenal PUSAKA HUKUM',
+                'title' => 'Mengenal SIPAKEM',
                 'category' => 'Edukasi',
-                'excerpt' => 'PUSAKA HUKUM menjadi pusat akses pengetahuan dan kajian hukum Bidkum Polda Lampung.',
-                'content' => 'PUSAKA HUKUM dirancang untuk mengintegrasikan dokumen, referensi, artikel, FAQ, dan layanan informasi hukum dalam satu portal digital.',
+                'excerpt' => 'SIPAKEM menjadi pusat akses pengetahuan dan kajian hukum Bidang Hukum dan HAM Polda Lampung.',
+                'content' => 'SIPAKEM dirancang untuk mengintegrasikan dokumen, referensi, artikel, FAQ, dan layanan informasi hukum dalam satu portal digital.',
                 'status' => 'published',
                 'created_by' => $superAdmin->id,
                 'published_at' => now(),
@@ -117,9 +115,9 @@ class DatabaseSeeder extends Seeder
         );
 
         Faq::updateOrCreate(
-            ['question' => 'Apa itu PUSAKA HUKUM?'],
+            ['question' => 'Apa itu SIPAKEM?'],
             [
-                'answer' => 'PUSAKA HUKUM adalah portal digital untuk mengelola dan mencari dokumen serta pengetahuan hukum Bidkum Polda Lampung.',
+                'answer' => 'SIPAKEM adalah portal digital untuk mengelola dan mencari dokumen serta pengetahuan hukum Bidang Hukum dan HAM Polda Lampung.',
                 'category' => 'Umum',
                 'status' => 'published',
             ]

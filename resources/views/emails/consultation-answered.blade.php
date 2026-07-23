@@ -3,7 +3,7 @@
 
 Halo {{ $consultation->name }},
 
-Pertanyaan yang Anda ajukan pada {{ $consultation->created_at->translatedFormat('d F Y') }} telah dijawab oleh tim Bidang Hukum Polda Lampung.
+Pertanyaan yang Anda ajukan pada {{ $consultation->created_at->translatedFormat('d F Y') }} telah dijawab oleh tim Bidang Hukum dan HAM Polda Lampung.
 
 **Kode pelacakan:** {{ $consultation->tracking_code }}
 
@@ -17,8 +17,8 @@ Pertanyaan yang Anda ajukan pada {{ $consultation->created_at->translatedFormat(
 Lihat Detail Jawaban
 </x-mail::button>
 
-Terima kasih telah menggunakan layanan Konsultasi Informasi Hukum PUSAKA HUKUM.
+Terima kasih telah menggunakan layanan Konsultasi Informasi Hukum SIPAKEM.
 
 Salam,<br>
-Bidang Hukum Polda Lampung
+Bidang Hukum dan HAM Polda Lampung
 </x-mail::message>

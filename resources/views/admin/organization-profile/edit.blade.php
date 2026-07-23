@@ -19,7 +19,7 @@
         <div class="row g-3">
             <div class="col-md-4">
                 <label class="form-label" for="portal_name">Nama Portal</label>
-                <input class="form-control" id="portal_name" name="portal_name" value="{{ old('portal_name', $profile->portal_name) }}" placeholder="Contoh: PUSAKA HUKUM" required>
+                <input class="form-control" id="portal_name" name="portal_name" value="{{ old('portal_name', $profile->portal_name) }}" placeholder="Contoh: SIPAKEM" required>
                 <div class="form-text">Nama singkat yang tampil pada navbar, footer, dan judul halaman.</div>
             </div>
             <div class="col-md-8">
@@ -29,7 +29,7 @@
             </div>
             <div class="col-md-6">
                 <label class="form-label" for="organization_name">Nama Instansi Pengelola</label>
-                <input class="form-control" id="organization_name" name="organization_name" value="{{ old('organization_name', $profile->organization_name) }}" placeholder="Contoh: Bidang Hukum Polda Lampung" required>
+                <input class="form-control" id="organization_name" name="organization_name" value="{{ old('organization_name', $profile->organization_name) }}" placeholder="Contoh: Bidang Hukum dan HAM Polda Lampung" required>
                 <div class="form-text">Nama instansi ini menjadi identitas resmi pengelola portal.</div>
             </div>
             <div class="col-md-6">
@@ -54,8 +54,8 @@
         <h2 class="h5 mb-3">Profil dan Tujuan</h2>
         <div class="row g-3">
             <div class="col-12">
-                <label class="form-label" for="about">Tentang PUSAKA HUKUM</label>
-                <textarea class="form-control" id="about" name="about" rows="5" placeholder="Jelaskan latar belakang, tujuan, dan cakupan layanan PUSAKA HUKUM sebagai portal pengetahuan hukum Bidkum Polda Lampung." required>{{ old('about', $profile->about) }}</textarea>
+                <label class="form-label" for="about">Tentang SIPAKEM</label>
+                <textarea class="form-control" id="about" name="about" rows="5" placeholder="Jelaskan latar belakang, tujuan, dan cakupan layanan SIPAKEM sebagai portal pengetahuan hukum Bidkum Polda Lampung." required>{{ old('about', $profile->about) }}</textarea>
                 <div class="form-text">Gunakan narasi resmi, namun tetap mudah dibaca oleh personel dan masyarakat.</div>
             </div>
             <div class="col-12">

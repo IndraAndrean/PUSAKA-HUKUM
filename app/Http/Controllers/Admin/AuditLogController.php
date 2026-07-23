@@ -52,7 +52,6 @@ class AuditLogController extends Controller
                 'today' => AuditLog::whereDate('created_at', today())->count(),
                 'last_seven_days' => AuditLog::where('created_at', '>=', now()->subDays(7))->count(),
                 'deletions' => AuditLog::where('action', 'deleted')->where('created_at', '>=', now()->subDays(30))->count(),
-                'imports' => AuditLog::where('action', 'imported')->where('created_at', '>=', now()->subDays(30))->count(),
             ],
         ]);
     }

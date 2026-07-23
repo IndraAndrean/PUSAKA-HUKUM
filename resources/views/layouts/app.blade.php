@@ -1,9 +1,13 @@
+@php
+    $appLogoUrl = $organizationProfile?->logo_url ?: asset('images/sipakem-logo.png');
+@endphp
 <!doctype html>
 <html lang="id">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>@yield('title', $organizationProfile?->portal_name ?? 'PUSAKA HUKUM')</title>
+    <title>@yield('title', $organizationProfile?->portal_name ?? 'SIPAKEM')</title>
+    <link rel="icon" type="image/png" href="{{ $appLogoUrl }}">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @stack('styles')
 </head>
@@ -11,14 +15,10 @@
 <nav class="navbar navbar-expand-xl topbar public-navbar sticky-top">
     <div class="container">
         <a class="navbar-brand d-flex align-items-center gap-2" href="{{ route('home') }}">
-            @if($organizationProfile?->logo_url)
-                <img class="brand-logo" src="{{ $organizationProfile->logo_url }}" alt="Logo {{ $organizationProfile->organization_name }}">
-            @else
-                <span class="brand-mark">PH</span>
-            @endif
+            <img class="brand-logo" src="{{ $appLogoUrl }}" alt="Logo {{ $organizationProfile?->organization_name ?? 'SIPAKEM' }}">
             <span class="brand-copy">
-                <span class="d-block fw-bold lh-sm">{{ $organizationProfile?->portal_name ?? 'PUSAKA HUKUM' }}</span>
-                <small>{{ $organizationProfile?->organization_name ?? 'Bidang Hukum Polda Lampung' }}</small>
+                <span class="d-block fw-bold lh-sm">{{ $organizationProfile?->portal_name ?? 'SIPAKEM' }}</span>
+                <small>{{ $organizationProfile?->organization_name ?? 'Bidang Hukum dan HAM Polda Lampung' }}</small>
             </span>
         </a>
         <button class="navbar-toggler" type="button" data-ui-toggle="collapse" data-ui-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Buka navigasi">
@@ -87,16 +87,10 @@
         <div class="footer-main">
             <div class="footer-brand">
                 <a class="footer-logo" href="{{ route('home') }}">
-                    @if($organizationProfile?->logo_url)
-                        <img class="brand-logo" src="{{ $organizationProfile->logo_url }}" alt="Logo {{ $organizationProfile->organization_name }}">
-                    @else
-                        <span class="brand-emblem brand-emblem-footer" aria-hidden="true">
-                            <i class="bi bi-book"></i>
-                        </span>
-                    @endif
+                    <img class="brand-logo" src="{{ $appLogoUrl }}" alt="Logo {{ $organizationProfile?->organization_name ?? 'SIPAKEM' }}">
                     <span>
-                        <span class="footer-logo-title">{{ $organizationProfile?->portal_name ?? 'PUSAKA HUKUM' }}</span>
-                        <small>{{ $organizationProfile?->organization_name ?? 'Bidang Hukum Polda Lampung' }}</small>
+                        <span class="footer-logo-title">{{ $organizationProfile?->portal_name ?? 'SIPAKEM' }}</span>
+                        <small>{{ $organizationProfile?->organization_name ?? 'Bidang Hukum dan HAM Polda Lampung' }}</small>
                     </span>
                 </a>
                 <p>{{ $organizationProfile?->about ? str($organizationProfile->about)->limit(150) : 'Pusat akses pengetahuan dan kajian hukum untuk mendukung profesionalisme dan akuntabilitas Polri.' }}</p>
@@ -144,13 +138,13 @@
                         <div><i class="bi bi-globe2"></i><a href="{{ $organizationProfile->website }}" target="_blank" rel="noopener">{{ str($organizationProfile->website)->replace(['https://', 'http://'], '') }}</a></div>
                     @endif
                     @unless($organizationProfile?->hasContactInformation())
-                        <div><i class="bi bi-building"></i><span>{{ $organizationProfile?->organization_name ?? 'Bidang Hukum Polda Lampung' }}</span></div>
+                        <div><i class="bi bi-building"></i><span>{{ $organizationProfile?->organization_name ?? 'Bidang Hukum dan HAM Polda Lampung' }}</span></div>
                     @endunless
                 </div>
             </div>
         </div>
         <div class="footer-bottom">
-            <div>&copy; {{ now()->year }} {{ $organizationProfile?->organization_name ?? 'Bidang Hukum Polda Lampung' }}. Semua Hak Dilindungi.</div>
+            <div>&copy; {{ now()->year }} {{ $organizationProfile?->organization_name ?? 'Bidang Hukum dan HAM Polda Lampung' }}. Semua Hak Dilindungi.</div>
             <div class="footer-bottom-links">
                 <a href="{{ route('organization-profile.show') }}">Kebijakan Privasi</a>
                 <span></span>

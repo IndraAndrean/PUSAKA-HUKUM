@@ -8,7 +8,7 @@
     $collectionBorder = match ($collection) {
         'perpustakaan' => 'border-l-pusaka-navy',
         'edukasi' => 'border-l-pusaka-gold',
-        default => 'border-l-pusaka-teal',
+        default => 'border-l-pusaka-navy',
     };
 @endphp
 <div class="doc-card border-l-4 {{ $collectionBorder }} p-4">

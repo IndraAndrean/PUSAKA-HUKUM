@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', $document->title.' - PUSAKA HUKUM')
+@section('title', $document->title.' - SIPAKEM')
 
 @section('content')
 @php
@@ -89,7 +89,7 @@
                         </div>
                         <div>
                             <div class="metadata-item-label"><i data-lucide="folder-open"></i> Bidang/Subbidang</div>
-                            <div class="metadata-item-value">{{ $document->bidang_subbidang ? ucfirst($document->bidang_subbidang) : '-' }}</div>
+                            <div class="metadata-item-value">{{ $document->division?->name ?? ($document->bidang_subbidang ? ucfirst($document->bidang_subbidang) : '-') }}</div>
                         </div>
                         <div>
                             <div class="metadata-item-label"><i data-lucide="history"></i> Versi Dokumen</div>

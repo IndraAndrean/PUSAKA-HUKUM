@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Materi Penyuluhan Hukum - PUSAKA HUKUM')
+@section('title', 'Materi Penyuluhan Hukum - SIPAKEM')
 
 @section('content')
 <section class="page-intro py-5">
@@ -27,7 +27,7 @@
     <div class="container">
         <form method="get" class="search-toolbar mb-4">
             <div class="input-group flex-grow-1">
-                <span class="input-group-text bg-white"><i data-lucide="search"></i></span>
+                <span class="input-group-text"><i data-lucide="search"></i></span>
                 <input class="form-control" name="q" value="{{ request('q') }}" placeholder="Judul, kategori, jenis, atau kata kunci">
             </div>
             @if(request('category'))<input type="hidden" name="category" value="{{ request('category') }}">@endif

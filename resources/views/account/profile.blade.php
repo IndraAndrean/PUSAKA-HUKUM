@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Profil Saya - PUSAKA HUKUM')
+@section('title', 'Profil Saya - SIPAKEM')
 
 @section('content')
 <section class="py-5">
@@ -12,7 +12,7 @@
         </nav>
         <div class="mb-4">
             <h1 class="h3">Profil Saya</h1>
-            <p class="text-muted mb-0">Kelola identitas akun dan keamanan password.</p>
+            <p class="text-muted mb-0">Kelola identitas akun dan keamanan kata sandi.</p>
         </div>
 
         @if($errors->any())
@@ -50,7 +50,7 @@
                             <input class="form-control" id="jabatan" name="jabatan" value="{{ old('jabatan', $user->jabatan) }}">
                         </div>
                         <div class="col-12">
-                            <label class="form-label" for="profile_current_password">Password Saat Ini</label>
+                            <label class="form-label" for="profile_current_password">Kata Sandi Saat Ini</label>
                             <input class="form-control" id="profile_current_password" type="password" name="current_password">
                             <div class="form-text">Wajib diisi hanya ketika mengubah email.</div>
                         </div>
@@ -65,21 +65,36 @@
                 <form class="item-card p-4" method="post" action="{{ route('profile.password') }}">
                     @csrf
                     @method('put')
-                    <h2 class="h5 mb-3">Ubah Password</h2>
+                    <h2 class="h5 mb-3">Ubah Kata Sandi</h2>
                     <div class="mb-3">
-                        <label class="form-label" for="password_current">Password Saat Ini</label>
+                        <label class="form-label" for="password_current">Kata Sandi Saat Ini</label>
                         <input class="form-control" id="password_current" type="password" name="current_password" required>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label" for="password">Password Baru</label>
+                        <label class="form-label" for="password">Kata Sandi Baru</label>
                         <input class="form-control" id="password" type="password" name="password" minlength="8" required>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label" for="password_confirmation">Konfirmasi Password Baru</label>
+                        <label class="form-label" for="password_confirmation">Konfirmasi Kata Sandi Baru</label>
                         <input class="form-control" id="password_confirmation" type="password" name="password_confirmation" minlength="8" required>
                     </div>
-                    <button class="btn btn-outline-primary" type="submit"><i class="bi bi-key"></i> Ubah Password</button>
+                    <button class="btn btn-outline-primary" type="submit"><i class="bi bi-key"></i> Ubah Kata Sandi</button>
                 </form>
+
+                <div class="item-card p-4 mt-4">
+                    <div class="d-flex justify-content-between align-items-start gap-3">
+                        <div>
+                            <h2 class="h5 mb-2">Verifikasi Dua Langkah</h2>
+                            <p class="text-muted mb-0">Tambahkan kode Google Authenticator saat masuk ke akun.</p>
+                        </div>
+                        <span class="badge {{ $user->hasTwoFactorEnabled() ? 'text-bg-primary' : 'text-bg-secondary' }}">
+                            {{ $user->hasTwoFactorEnabled() ? 'Aktif' : 'Belum aktif' }}
+                        </span>
+                    </div>
+                    <a class="btn btn-outline-primary mt-3" href="{{ route('profile.two-factor') }}">
+                        <i class="bi bi-shield-lock"></i> Kelola Verifikasi
+                    </a>
+                </div>
             </div>
         </div>
     </div>

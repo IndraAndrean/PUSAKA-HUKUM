@@ -21,7 +21,7 @@ class PublicDocumentController extends Controller
         $allCollections = $request->input('collection') === 'all';
 
         $documents = $this->filteredQuery($request, $allCollections)
-            ->with(['type', 'category'])
+            ->with(['type', 'category', 'division'])
             ->tap(fn (Builder $query) => $this->applySort($query, $request))
             ->paginate(10)
             ->withQueryString();
@@ -135,9 +135,9 @@ class PublicDocumentController extends Controller
             'accessed_at' => now(),
         ]);
 
-        $document->load(['type', 'category', 'uploader']);
+        $document->load(['type', 'category', 'division', 'uploader']);
 
-        $relatedDocuments = Document::with(['type', 'category'])
+        $relatedDocuments = Document::with(['type', 'category', 'division'])
             ->visibleFor($request->user())
             ->whereKeyNot($document->id)
             ->when($document->legal_category_id, fn ($query) => $query->where('legal_category_id', $document->legal_category_id))

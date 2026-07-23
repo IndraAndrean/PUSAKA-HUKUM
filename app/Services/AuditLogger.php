@@ -7,7 +7,7 @@ use App\Models\AuditLog;
 use App\Models\Backup;
 use App\Models\Consultation;
 use App\Models\Document;
-use App\Models\DocumentImportBatch;
+use App\Models\DocumentDivision;
 use App\Models\DocumentType;
 use App\Models\Faq;
 use App\Models\KpiTarget;
@@ -58,13 +58,13 @@ class AuditLogger
     {
         return match (true) {
             $subject instanceof Document => 'Dokumen',
+            $subject instanceof DocumentDivision => 'Bidang/Subbidang',
             $subject instanceof DocumentType => 'Jenis Dokumen',
             $subject instanceof LegalCategory => 'Kategori Hukum',
             $subject instanceof Article => 'Artikel',
             $subject instanceof Faq => 'FAQ',
             $subject instanceof Consultation => 'Konsultasi',
             $subject instanceof User => 'Pengguna',
-            $subject instanceof DocumentImportBatch => 'Import Dokumen',
             $subject instanceof Backup => 'Backup',
             $subject instanceof OrganizationProfile => 'Profil Instansi',
             $subject instanceof KpiTarget => 'Indikator Keberhasilan',
@@ -76,16 +76,16 @@ class AuditLogger
     {
         return match (true) {
             $subject instanceof Document => trim($subject->document_code.' - '.$subject->title, ' -'),
+            $subject instanceof DocumentDivision => (string) $subject->name,
             $subject instanceof DocumentType => (string) $subject->name,
             $subject instanceof LegalCategory => (string) $subject->name,
             $subject instanceof Article => (string) $subject->title,
             $subject instanceof Faq => (string) $subject->question,
             $subject instanceof Consultation => 'Konsultasi '.$subject->name,
             $subject instanceof User => trim($subject->name.' - '.$subject->email, ' -'),
-            $subject instanceof DocumentImportBatch => (string) $subject->spreadsheet_name,
             $subject instanceof Backup => (string) $subject->filename,
             $subject instanceof OrganizationProfile => (string) $subject->organization_name,
-            $subject instanceof KpiTarget => 'Target KPI PUSAKA HUKUM',
+            $subject instanceof KpiTarget => 'Target KPI SIPAKEM',
             default => (string) ($subject->getKey() ?? class_basename($subject)),
         };
     }

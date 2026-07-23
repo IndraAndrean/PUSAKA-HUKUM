@@ -63,14 +63,14 @@ class KpiController extends Controller
     {
         $target = KpiTarget::current();
         $metrics = $metricsService->build($target);
-        $filename = 'laporan-kpi-pusaka-hukum-'.now()->format('Y-m-d').'.csv';
+        $filename = 'laporan-kpi-sipakem-'.now()->format('Y-m-d').'.csv';
 
         return response()->streamDownload(function () use ($metrics, $target) {
             $output = fopen('php://output', 'w');
             $write = fn (array $row) => fputcsv($output, array_map(self::csvSafe(...), $row));
 
             fwrite($output, "\xEF\xBB\xBF");
-            $write(['LAPORAN INDIKATOR KEBERHASILAN PUSAKA HUKUM']);
+            $write(['LAPORAN INDIKATOR KEBERHASILAN SIPAKEM']);
             $write(['Tanggal laporan', now()->format('d/m/Y H:i')]);
             $write([]);
             $write(['Indikator', 'Realisasi', 'Target', 'Satuan', 'Capaian (%)', 'Status', 'Sumber']);

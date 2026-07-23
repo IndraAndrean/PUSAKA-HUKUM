@@ -36,15 +36,15 @@ return new class extends Migration
 
         DB::table('organization_profiles')->insert([
             'id' => 1,
-            'portal_name' => 'PUSAKA HUKUM',
-            'portal_full_name' => 'Pusat Akses Pengetahuan dan Kajian Hukum',
+            'portal_name' => 'SIPAKEM',
+            'portal_full_name' => 'Sistem Informasi Arsip Konsultasi Edukasi dan Manajemen Hukum',
             'tagline' => 'Satu Akses untuk Semua Pengetahuan Hukum',
-            'organization_name' => 'Bidang Hukum Polda Lampung',
+            'organization_name' => 'Bidang Hukum dan HAM Polda Lampung',
             'eyebrow' => 'Digitalisasi Pengetahuan Hukum Terintegrasi',
             'hero_description' => 'Pusat data, perpustakaan digital, media pembelajaran, dan layanan informasi hukum yang mudah, cepat, serta terintegrasi bagi personel Polri dan masyarakat.',
-            'about' => 'PUSAKA HUKUM merupakan aplikasi berbasis web yang mengintegrasikan produk hukum, referensi, kajian, artikel edukasi, FAQ, dan konsultasi informasi hukum dalam satu platform digital yang dikelola oleh Bidang Hukum Polda Lampung.',
-            'institution_duties' => 'Bidang Hukum Polda Lampung merupakan unsur pendukung di bawah Kapolda Lampung yang menyelenggarakan pembinaan hukum, bantuan dan pertimbangan hukum, penyuluhan hukum, serta pengkajian dan pengembangan hukum di lingkungan Polda Lampung.',
-            'general_goal' => 'Mewujudkan transformasi digital pengelolaan pengetahuan hukum guna meningkatkan efektivitas, efisiensi, dan kualitas pelayanan informasi hukum di Bidang Hukum Polda Lampung.',
+            'about' => 'SIPAKEM merupakan aplikasi berbasis web yang mengintegrasikan produk hukum, referensi, kajian, artikel edukasi, FAQ, dan konsultasi informasi hukum dalam satu platform digital yang dikelola oleh Bidang Hukum dan HAM Polda Lampung.',
+            'institution_duties' => 'Bidang Hukum dan HAM Polda Lampung merupakan unsur pendukung di bawah Kapolda Lampung yang menyelenggarakan pembinaan hukum, bantuan dan pertimbangan hukum, penyuluhan hukum, serta pengkajian dan pengembangan hukum di lingkungan Polda Lampung.',
+            'general_goal' => 'Mewujudkan transformasi digital pengelolaan pengetahuan hukum guna meningkatkan efektivitas, efisiensi, dan kualitas pelayanan informasi hukum di Bidang Hukum dan HAM Polda Lampung.',
             'services' => json_encode([
                 'Bank Produk Hukum',
                 'Perpustakaan Digital Hukum',

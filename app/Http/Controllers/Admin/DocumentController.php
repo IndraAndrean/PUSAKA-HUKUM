@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Document;
+use App\Models\DocumentDivision;
 use App\Models\DocumentType;
 use App\Models\LegalCategory;
 use App\Services\DocumentStandardService;
@@ -18,7 +19,7 @@ class DocumentController extends Controller
 {
     public function index(Request $request): View
     {
-        $documents = Document::with(['type', 'category', 'uploader'])
+        $documents = Document::with(['type', 'category', 'division', 'uploader'])
             ->when($request->filled('q'), function ($query) use ($request) {
                 $keyword = $request->string('q')->toString();
                 $query->search($keyword);
@@ -35,9 +36,19 @@ class DocumentController extends Controller
         ]);
     }
 
-    public function create(): View
+    public function create(Request $request): View
     {
-        return view('admin.documents.form', $this->formData(new Document));
+        $collection = $request->string('collection')->toString();
+
+        if ($collection === '') {
+            return view('admin.documents.choose-collection', [
+                'collections' => DocumentType::COLLECTIONS,
+            ]);
+        }
+
+        abort_unless(array_key_exists($collection, DocumentType::COLLECTIONS), 404);
+
+        return view('admin.documents.form', $this->formData(new Document, $collection));
     }
 
     public function store(Request $request, DocumentStandardService $standards): RedirectResponse
@@ -61,7 +72,7 @@ class DocumentController extends Controller
 
     public function edit(Document $document): View
     {
-        return view('admin.documents.form', $this->formData($document));
+        return view('admin.documents.form', $this->formData($document, $document->type?->collection));
     }
 
     public function update(
@@ -119,22 +130,24 @@ class DocumentController extends Controller
     {
         $type = DocumentType::find($request->integer('document_type_id'));
         $library = $type?->isLibrary() ?? false;
+        $education = $type?->isEducation() ?? false;
+        $referenceLike = $library || $education;
 
         $validator = Validator::make($request->all(), [
             'title' => ['required', 'string', 'max:255'],
-            'author' => [$library ? 'required' : 'nullable', 'string', 'max:255'],
+            'author' => [$referenceLike ? 'required' : 'nullable', 'string', 'max:255'],
             'document_type_id' => ['required', 'exists:document_types,id'],
-            'document_number' => [$library ? 'nullable' : 'required', 'string', 'max:100'],
+            'document_number' => [$referenceLike ? 'nullable' : 'required', 'string', 'max:100'],
             'year' => ['required', 'integer', 'min:1900', 'max:2100'],
-            'enacted_date' => [$library ? 'nullable' : 'required', 'date'],
-            'effective_date' => [$library ? 'nullable' : 'required', 'date', 'after_or_equal:enacted_date'],
+            'enacted_date' => [$referenceLike ? 'nullable' : 'required', 'date'],
+            'effective_date' => [$referenceLike ? 'nullable' : 'required', 'date', 'after_or_equal:enacted_date'],
             'issuing_institution' => ['required', 'string', 'max:255'],
             'publisher' => [$library ? 'required' : 'nullable', 'string', 'max:255'],
             'isbn_issn' => ['nullable', 'string', 'max:50'],
             'edition_volume' => ['nullable', 'string', 'max:100'],
             'document_status' => ['required', 'in:berlaku,dicabut,diubah,tidak_berlaku'],
             'legal_category_id' => ['required', 'exists:legal_categories,id'],
-            'bidang_subbidang' => ['required', 'in:kum,bankum,sunluhkum'],
+            'bidang_subbidang' => ['required', 'exists:document_divisions,code'],
             'keywords' => ['required', 'string'],
             'summary' => ['required', 'string', 'min:20'],
             'abstract' => ['nullable', 'string'],
@@ -151,7 +164,7 @@ class DocumentController extends Controller
             'file.max' => 'Ukuran file PDF maksimal 20 MB.',
         ]);
 
-        $validator->after(function ($validator) use ($request, $document, $library) {
+        $validator->after(function ($validator) use ($request, $document, $referenceLike) {
             $keywords = collect(preg_split('/[,;]+/', (string) $request->input('keywords')))
                 ->map(fn ($keyword) => trim($keyword))
                 ->filter()
@@ -179,7 +192,7 @@ class DocumentController extends Controller
                         'Dokumen dengan jenis, nomor, dan tahun yang sama sudah terdaftar.'
                     );
                 }
-            } elseif ($library && $request->filled('document_type_id') && $request->filled('title') && $request->filled('year')) {
+            } elseif ($referenceLike && $request->filled('document_type_id') && $request->filled('title') && $request->filled('year')) {
                 $duplicate = Document::query()
                     ->where('document_type_id', $request->integer('document_type_id'))
                     ->whereRaw('LOWER(title) = ?', [mb_strtolower(trim($request->string('title')->toString()))])
@@ -203,16 +216,22 @@ class DocumentController extends Controller
         return $validator->validated();
     }
 
-    private function formData(Document $document): array
+    private function formData(Document $document, ?string $collection = null): array
     {
+        $types = DocumentType::query()
+            ->when($collection, fn ($query) => $query->where('collection', $collection))
+            ->orderBy('name')
+            ->get();
+
         return [
             'document' => $document,
-            'types' => DocumentType::orderBy('name')->get(),
+            'selectedCollection' => $collection,
+            'types' => $types,
             'collections' => DocumentType::COLLECTIONS,
             'categories' => LegalCategory::orderBy('name')->get(),
+            'divisions' => DocumentDivision::orderBy('name')->get(),
             'statuses' => ['berlaku' => 'Berlaku', 'dicabut' => 'Dicabut', 'diubah' => 'Diubah', 'tidak_berlaku' => 'Tidak Berlaku'],
             'accessLevels' => ['publik' => 'Publik', 'internal' => 'Internal', 'terbatas' => 'Terbatas'],
-            'subfields' => ['kum' => 'Kum', 'bankum' => 'Bankum', 'sunluhkum' => 'Sunluhkum'],
         ];
     }
 }

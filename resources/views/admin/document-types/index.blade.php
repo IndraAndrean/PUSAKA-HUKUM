@@ -9,13 +9,12 @@
 
 @section('content')
 <div class="content-card p-3">
-    <form method="get" class="row g-2 mb-3">
-        <div class="col-md-10">
+    <form method="get" class="search-toolbar mb-3">
+        <div class="input-group flex-grow-1">
+            <span class="input-group-text"><i data-lucide="search"></i></span>
             <input class="form-control" name="q" value="{{ request('q') }}" placeholder="Cari jenis dokumen">
         </div>
-        <div class="col-md-2 d-grid">
-            <button class="btn btn-outline-secondary" type="submit"><i class="bi bi-search"></i> Cari</button>
-        </div>
+        <button class="btn btn-outline-secondary" type="submit"><i data-lucide="search"></i> Cari</button>
     </form>
     <div class="table-responsive">
         <table class="table align-middle">
@@ -30,7 +29,7 @@
                     <td class="text-center"><span class="badge text-bg-light">{{ $documentType->documents_count }}</span></td>
                     <td class="text-end">
                         <a class="btn btn-sm btn-outline-primary" href="{{ route('admin.document-types.edit', $documentType) }}" title="Edit"><i class="bi bi-pencil"></i></a>
-                        <form class="d-inline" method="post" action="{{ route('admin.document-types.destroy', $documentType) }}" onsubmit="return confirm('Hapus jenis dokumen ini?')">
+                        <form class="d-inline" method="post" action="{{ route('admin.document-types.destroy', $documentType) }}" data-confirm="Jenis dokumen ini akan dihapus jika belum digunakan oleh dokumen lain." data-confirm-title="Hapus Jenis Dokumen" data-confirm-label="Ya, Hapus" data-confirm-variant="danger">
                             @csrf
                             @method('delete')
                             <button class="btn btn-sm btn-outline-danger" type="submit" title="Hapus" @disabled($documentType->documents_count > 0)><i class="bi bi-trash"></i></button>

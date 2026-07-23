@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Konsultasi Informasi Hukum - PUSAKA HUKUM')
+@section('title', 'Konsultasi Informasi Hukum - SIPAKEM')
 
 @section('content')
 <section class="py-5">
@@ -26,7 +26,7 @@
                 <div class="item-card p-4">
                     <h1 class="h3">Konsultasi Informasi Hukum</h1>
                     <p class="text-muted mb-2">Kirim pertanyaan atau kebutuhan rujukan dokumen hukum kepada pengelola.</p>
-                    <p class="small text-muted">Konsultasi dijawab oleh pengelola PUSAKA HUKUM sesuai ketersediaan waktu &mdash; waktu respons dapat bervariasi. Setelah mengirim, Anda akan menerima kode pelacakan untuk mengecek status jawaban kapan saja di <a href="{{ route('consultation.status') }}">halaman cek status</a>.</p>
+                    <p class="small text-muted">Konsultasi dijawab oleh pengelola SIPAKEM sesuai ketersediaan waktu &mdash; waktu respons dapat bervariasi. Setelah mengirim, Anda akan menerima kode pelacakan untuk mengecek status jawaban kapan saja di <a href="{{ route('consultation.status') }}">halaman cek status</a>.</p>
                     <form method="post" action="{{ route('consultation.store') }}">
                         @csrf
                         <div class="row g-3">

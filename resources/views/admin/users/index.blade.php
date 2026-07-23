@@ -9,21 +9,18 @@
 
 @section('content')
 <div class="content-card p-3">
-    <form method="get" class="row g-2 mb-3">
-        <div class="col-md-8">
+    <form method="get" class="search-toolbar mb-3">
+        <div class="input-group flex-grow-1">
+            <span class="input-group-text"><i data-lucide="search"></i></span>
             <input class="form-control" name="q" value="{{ request('q') }}" placeholder="Cari nama, email, atau satuan kerja">
         </div>
-        <div class="col-md-2">
-            <select class="form-select" name="role">
-                <option value="">Semua role</option>
-                <option value="super_admin" @selected(request('role') === 'super_admin')>Super Admin</option>
-                <option value="admin" @selected(request('role') === 'admin')>Admin</option>
-                <option value="internal" @selected(request('role') === 'internal')>Internal</option>
-            </select>
-        </div>
-        <div class="col-md-2 d-grid">
-            <button class="btn btn-outline-secondary" type="submit"><i class="bi bi-search"></i> Filter</button>
-        </div>
+        <select class="form-select" name="role" aria-label="Filter role pengguna">
+            <option value="">Semua role</option>
+            <option value="super_admin" @selected(request('role') === 'super_admin')>Super Admin</option>
+            <option value="admin" @selected(request('role') === 'admin')>Admin</option>
+            <option value="internal" @selected(request('role') === 'internal')>Internal</option>
+        </select>
+        <button class="btn btn-outline-secondary" type="submit"><i data-lucide="filter"></i> Filter</button>
     </form>
     <div class="table-responsive">
         <table class="table align-middle">
@@ -41,7 +38,7 @@
                     <td class="text-end">
                         <a class="btn btn-sm btn-outline-primary" href="{{ route('admin.users.edit', $user) }}"><i class="bi bi-pencil"></i></a>
                         @unless(auth()->user()->is($user))
-                            <form class="d-inline" method="post" action="{{ route('admin.users.destroy', $user) }}" onsubmit="return confirm('Hapus pengguna ini?')">
+                            <form class="d-inline" method="post" action="{{ route('admin.users.destroy', $user) }}" data-confirm="Akun pengguna ini akan dihapus dari sistem. Pastikan akun tidak lagi digunakan." data-confirm-title="Hapus Pengguna" data-confirm-label="Ya, Hapus" data-confirm-variant="danger">
                                 @csrf
                                 @method('delete')
                                 <button class="btn btn-sm btn-outline-danger" type="submit"><i class="bi bi-trash"></i></button>

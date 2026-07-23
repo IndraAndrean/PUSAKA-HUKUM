@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', $article->title.' - PUSAKA HUKUM')
+@section('title', $article->title.' - SIPAKEM')
 
 @section('content')
 <section class="py-5">
@@ -30,7 +30,7 @@
                     @endif
                     <hr>
                     <div class="article-body">{{ $article->content }}</div>
-                    <div class="small text-muted mt-4 d-flex align-items-center gap-1"><i data-lucide="user"></i> Penulis: {{ $article->author?->name ?? 'Pengelola PUSAKA HUKUM' }}</div>
+                    <div class="small text-muted mt-4 d-flex align-items-center gap-1"><i data-lucide="user"></i> Penulis: {{ $article->author?->name ?? 'Pengelola SIPAKEM' }}</div>
                 </article>
 
                 @if($relatedArticles->isNotEmpty())

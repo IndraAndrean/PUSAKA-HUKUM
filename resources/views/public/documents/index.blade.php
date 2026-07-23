@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', ($allCollections ? 'Hasil Pencarian' : 'Bank Produk Hukum').' - PUSAKA HUKUM')
+@section('title', ($allCollections ? 'Hasil Pencarian' : 'Bank Produk Hukum').' - SIPAKEM')
 
 @section('content')
 @php
@@ -28,7 +28,7 @@
         </nav>
 
         <div class="mb-4">
-            <h1 class="h3">{{ $allCollections ? 'Hasil Pencarian PUSAKA HUKUM' : 'Bank Produk Hukum' }}</h1>
+            <h1 class="h3">{{ $allCollections ? 'Hasil Pencarian SIPAKEM' : 'Bank Produk Hukum' }}</h1>
             <p class="text-muted mb-0">{{ $allCollections ? 'Hasil pencarian dari bank produk hukum, perpustakaan digital, dan materi edukasi.' : 'Cari produk hukum berdasarkan judul, jenis, kategori, status, tahun, dan kata kunci.' }}</p>
         </div>
 
@@ -40,7 +40,7 @@
             @if(request('status'))<input type="hidden" name="status" value="{{ request('status') }}">@endif
 
             <div class="input-group flex-grow-1">
-                <span class="input-group-text bg-white"><i data-lucide="search"></i></span>
+                <span class="input-group-text"><i data-lucide="search"></i></span>
                 <input class="form-control" name="q" value="{{ request('q') }}" placeholder="Cari judul, jenis, kategori, status, tahun, atau kata kunci">
             </div>
 

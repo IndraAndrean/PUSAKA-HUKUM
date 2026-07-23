@@ -183,7 +183,7 @@ class SystemBackupTest extends TestCase
         $zip->open($path, ZipArchive::CREATE | ZipArchive::OVERWRITE);
         $zip->addFromString('database.sql', 'SELECT 1;');
         $zip->addFromString('manifest.json', json_encode([
-            'application' => 'PUSAKA HUKUM',
+            'application' => 'SIPAKEM',
             'format_version' => 1,
             'database_dump' => 'database.sql',
             'database' => config('database.connections.mysql.database'),

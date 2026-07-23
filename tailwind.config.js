@@ -11,14 +11,14 @@ export default {
                 pusaka: {
                     navy: '#241ee8',
                     deep: '#241ee8',
-                    teal: '#14776d',
-                    'teal-dark': '#0f625a',
+                    teal: '#241ee8',
+                    'teal-dark': '#241ee8',
                     gold: '#d3a72f',
                     red: '#a33b42',
                     ink: '#17272f',
                     muted: '#64757d',
-                    line: '#dce5e3',
-                    soft: '#f3f7f6',
+                    line: '#dfe3ff',
+                    soft: '#f5f6ff',
                 },
             },
             boxShadow: {

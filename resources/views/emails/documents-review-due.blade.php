@@ -3,7 +3,7 @@
 
 Halo,
 
-Berikut {{ $documents->count() }} dokumen di PUSAKA HUKUM yang sudah melewati jadwal tinjau ulangnya dan perlu diperiksa kembali kelengkapan/keakuratannya.
+Berikut {{ $documents->count() }} dokumen di SIPAKEM yang sudah melewati jadwal tinjau ulangnya dan perlu diperiksa kembali kelengkapan/keakuratannya.
 
 <x-mail::table>
 | Dokumen | Jenis | Jatuh Tempo |
@@ -17,8 +17,8 @@ Berikut {{ $documents->count() }} dokumen di PUSAKA HUKUM yang sudah melewati ja
 Buka Manajemen Dokumen
 </x-mail::button>
 
-Email ini dikirim otomatis tiap minggu oleh sistem PUSAKA HUKUM.
+Email ini dikirim otomatis tiap minggu oleh sistem SIPAKEM.
 
 Salam,<br>
-Bidang Hukum Polda Lampung
+Bidang Hukum dan HAM Polda Lampung
 </x-mail::message>

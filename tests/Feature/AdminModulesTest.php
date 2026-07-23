@@ -5,11 +5,14 @@ namespace Tests\Feature;
 use App\Models\Article;
 use App\Models\Consultation;
 use App\Models\Document;
+use App\Models\DocumentDivision;
 use App\Models\DocumentType;
 use App\Models\Faq;
 use App\Models\LegalCategory;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class AdminModulesTest extends TestCase
@@ -32,6 +35,121 @@ class AdminModulesTest extends TestCase
         $this->actingAs($admin)->get(route('admin.users.index'))->assertForbidden();
     }
 
+    public function test_bulk_import_document_feature_is_not_available(): void
+    {
+        $admin = User::create([
+            'name' => 'Admin Tanpa Import',
+            'email' => 'admin-tanpa-import@pusakahukum.test',
+            'password' => 'password',
+            'role' => 'admin',
+            'is_active' => true,
+        ]);
+
+        $this->actingAs($admin)
+            ->get(route('admin.documents.index'))
+            ->assertOk()
+            ->assertDontSee('Import Massal')
+            ->assertDontSee('Import</a>', false);
+
+        $this->actingAs($admin)->get('/admin/import-dokumen')->assertNotFound();
+        $this->actingAs($admin)->post('/admin/import-dokumen')->assertNotFound();
+        $this->actingAs($admin)->get('/admin/import-dokumen/template/csv')->assertNotFound();
+        $this->actingAs($admin)->get('/admin/import-dokumen/template/xlsx')->assertNotFound();
+        $this->actingAs($admin)->get('/admin/document-imports')->assertNotFound();
+    }
+
+    public function test_document_create_flow_is_split_by_collection(): void
+    {
+        $admin = User::create([
+            'name' => 'Admin Koleksi Dokumen',
+            'email' => 'admin-koleksi-dokumen@pusakahukum.test',
+            'password' => 'password',
+            'role' => 'admin',
+            'is_active' => true,
+        ]);
+
+        $lawType = DocumentType::create([
+            'name' => 'Produk Hukum Pilihan',
+            'slug' => 'produk-hukum-pilihan',
+            'code_prefix' => 'REG-PILIH',
+            'review_interval_months' => 3,
+            'collection' => 'produk_hukum',
+        ]);
+        $libraryType = DocumentType::create([
+            'name' => 'Perpustakaan Pilihan',
+            'slug' => 'perpustakaan-pilihan',
+            'code_prefix' => 'LIB-PILIH',
+            'review_interval_months' => 6,
+            'collection' => 'perpustakaan',
+        ]);
+
+        $this->actingAs($admin)
+            ->get(route('admin.documents.create'))
+            ->assertOk()
+            ->assertSee('Bank Produk Hukum')
+            ->assertSee('Perpustakaan Digital')
+            ->assertSee('Materi Edukasi');
+
+        $this->actingAs($admin)
+            ->get(route('admin.documents.create', ['collection' => 'produk_hukum']))
+            ->assertOk()
+            ->assertSee($lawType->name)
+            ->assertDontSee($libraryType->name);
+    }
+
+    public function test_admin_can_upload_education_material_without_regulation_number_or_dates(): void
+    {
+        Storage::fake('documents');
+
+        $admin = User::create([
+            'name' => 'Admin Materi Edukasi',
+            'email' => 'admin-materi-edukasi@pusakahukum.test',
+            'password' => 'password',
+            'role' => 'admin',
+            'is_active' => true,
+        ]);
+
+        $type = DocumentType::create([
+            'name' => 'Materi Edukasi Pengujian',
+            'slug' => 'materi-edukasi-pengujian',
+            'code_prefix' => 'SUNLUH-UJI',
+            'review_interval_months' => 6,
+            'collection' => 'edukasi',
+        ]);
+        $category = LegalCategory::create([
+            'name' => 'Kategori Edukasi Pengujian',
+            'slug' => 'kategori-edukasi-pengujian',
+        ]);
+
+        $this->actingAs($admin)->post(route('admin.documents.store'), [
+            'title' => 'Materi Penyuluhan Bantuan Hukum',
+            'author' => 'Tim Sunluhkum',
+            'document_type_id' => $type->id,
+            'document_number' => '',
+            'year' => 2026,
+            'enacted_date' => '',
+            'effective_date' => '',
+            'issuing_institution' => 'Bidkum Polda Lampung',
+            'publisher' => '',
+            'isbn_issn' => '',
+            'edition_volume' => '',
+            'document_status' => 'berlaku',
+            'legal_category_id' => $category->id,
+            'bidang_subbidang' => 'sunluhkum',
+            'keywords' => 'penyuluhan, bantuan hukum, edukasi',
+            'summary' => 'Materi edukasi untuk penyuluhan bantuan hukum kepada personel dan masyarakat.',
+            'document_version' => '1.0',
+            'access_level' => 'publik',
+            'file' => UploadedFile::fake()->create('materi.pdf', 100, 'application/pdf'),
+        ])->assertRedirect(route('admin.documents.index'));
+
+        $document = Document::where('title', 'Materi Penyuluhan Bantuan Hukum')->firstOrFail();
+
+        $this->assertNull($document->document_number);
+        $this->assertNull($document->enacted_date);
+        $this->assertSame(100, $document->metadata_completeness);
+    }
+
     public function test_admin_can_create_article_and_faq(): void
     {
         $admin = User::create([
@@ -46,7 +164,7 @@ class AdminModulesTest extends TestCase
             'title' => 'Artikel Pengujian Portal',
             'category' => 'Edukasi',
             'excerpt' => 'Ringkasan artikel pengujian.',
-            'content' => 'Isi artikel pengujian portal PUSAKA HUKUM.',
+            'content' => 'Isi artikel pengujian portal SIPAKEM.',
             'status' => 'published',
         ])->assertRedirect(route('admin.articles.index'));
 
@@ -122,7 +240,7 @@ class AdminModulesTest extends TestCase
         ]);
     }
 
-    public function test_admin_can_manage_document_types_and_legal_categories(): void
+    public function test_admin_can_manage_document_types_legal_categories_and_document_divisions(): void
     {
         $admin = User::create([
             'name' => 'Admin Master Data',
@@ -144,15 +262,25 @@ class AdminModulesTest extends TestCase
             'description' => 'Kategori hukum untuk pengujian.',
         ])->assertRedirect(route('admin.legal-categories.index'));
 
+        $this->actingAs($admin)->post(route('admin.document-divisions.store'), [
+            'name' => 'Subbidang Pengujian',
+            'code' => 'subbid-test',
+            'description' => 'Bidang/subbidang untuk pengujian.',
+        ])->assertRedirect(route('admin.document-divisions.index'));
+
         $type = DocumentType::where('name', 'Peraturan Pengujian')->firstOrFail();
         $category = LegalCategory::where('name', 'Kategori Pengujian')->firstOrFail();
+        $division = DocumentDivision::where('name', 'Subbidang Pengujian')->firstOrFail();
 
         $this->assertSame('peraturan-pengujian', $type->slug);
         $this->assertSame('kategori-pengujian', $category->slug);
+        $this->assertSame('subbidang-pengujian', $division->slug);
 
         $this->actingAs($admin)->delete(route('admin.document-types.destroy', $type))
             ->assertSessionHas('success');
         $this->actingAs($admin)->delete(route('admin.legal-categories.destroy', $category))
+            ->assertSessionHas('success');
+        $this->actingAs($admin)->delete(route('admin.document-divisions.destroy', $division))
             ->assertSessionHas('success');
     }
 
@@ -176,12 +304,18 @@ class AdminModulesTest extends TestCase
             'name' => 'Kategori Terpakai',
             'slug' => 'kategori-terpakai',
         ]);
+        $division = DocumentDivision::create([
+            'name' => 'Bidang Terpakai',
+            'slug' => 'bidang-terpakai',
+            'code' => 'bidang-terpakai',
+        ]);
 
         Document::create([
             'document_code' => 'TEST-MASTER-001',
             'title' => 'Dokumen Proteksi Master Data',
             'document_type_id' => $type->id,
             'legal_category_id' => $category->id,
+            'bidang_subbidang' => $division->code,
             'document_status' => 'berlaku',
             'access_level' => 'publik',
             'uploaded_by' => $admin->id,
@@ -191,9 +325,12 @@ class AdminModulesTest extends TestCase
             ->assertSessionHas('error');
         $this->actingAs($admin)->delete(route('admin.legal-categories.destroy', $category))
             ->assertSessionHas('error');
+        $this->actingAs($admin)->delete(route('admin.document-divisions.destroy', $division))
+            ->assertSessionHas('error');
 
         $this->assertDatabaseHas('document_types', ['id' => $type->id]);
         $this->assertDatabaseHas('legal_categories', ['id' => $category->id]);
+        $this->assertDatabaseHas('document_divisions', ['id' => $division->id]);
     }
 
     public function test_admin_dashboard_contains_activity_statistics(): void

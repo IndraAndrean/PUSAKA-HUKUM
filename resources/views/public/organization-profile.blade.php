@@ -25,17 +25,17 @@
         <div class="row g-5">
             <div class="col-lg-7">
                 <div class="mb-5">
-                    <div class="text-uppercase small fw-semibold text-success mb-2">Tentang Inovasi</div>
+                    <div class="text-uppercase small fw-semibold text-primary mb-2">Tentang Inovasi</div>
                     <h2 class="h3">{{ $profile->portal_name }}</h2>
                     <p class="text-muted">{{ $profile->about }}</p>
                 </div>
                 <div class="mb-5">
-                    <div class="text-uppercase small fw-semibold text-success mb-2">Tugas dan Fungsi</div>
+                    <div class="text-uppercase small fw-semibold text-primary mb-2">Tugas dan Fungsi</div>
                     <h2 class="h4">{{ $profile->organization_name }}</h2>
                     <p class="text-muted mb-0">{{ $profile->institution_duties }}</p>
                 </div>
                 <div>
-                    <div class="text-uppercase small fw-semibold text-success mb-2">Tujuan Umum</div>
+                    <div class="text-uppercase small fw-semibold text-primary mb-2">Tujuan Umum</div>
                     <p class="fs-5 mb-0">{{ $profile->general_goal }}</p>
                 </div>
             </div>
@@ -45,7 +45,7 @@
                     <div class="d-grid gap-3">
                         @foreach($profile->services as $service)
                             <div class="d-flex gap-3">
-                                <i class="bi bi-check-circle-fill text-success"></i>
+                                <i class="bi bi-check-circle-fill text-primary"></i>
                                 <span>{{ $service }}</span>
                             </div>
                         @endforeach
@@ -59,7 +59,7 @@
 <section class="py-5 section-band">
     <div class="container">
         <div class="mb-4">
-            <div class="text-uppercase small fw-semibold text-success mb-2">Manfaat</div>
+            <div class="text-uppercase small fw-semibold text-primary mb-2">Manfaat</div>
             <h2 class="h3 mb-0">Dibangun untuk organisasi, personel, dan masyarakat</h2>
         </div>
         <div class="row g-4">
@@ -70,7 +70,7 @@
             ] as [$title, $icon, $benefits])
                 <div class="col-lg-4">
                     <div class="item-card p-4 h-100">
-                        <i class="bi {{ $icon }} fs-3 text-success"></i>
+                        <i class="bi {{ $icon }} fs-3 text-primary"></i>
                         <h3 class="h5 mt-3">{{ $title }}</h3>
                         <ul class="ps-3 mb-0 text-muted">
                             @foreach($benefits as $benefit)
@@ -88,7 +88,7 @@
     <div class="container">
         <div class="row g-5">
             <div class="col-lg-7">
-                <div class="text-uppercase small fw-semibold text-success mb-2">Nilai Organisasi</div>
+                <div class="text-uppercase small fw-semibold text-primary mb-2">Nilai Organisasi</div>
                 <h2 class="h3">BerAKHLAK dan Presisi</h2>
                 <div class="d-flex flex-wrap gap-2 mt-3">
                     @foreach($profile->organization_values as $value)
@@ -110,7 +110,7 @@
                     @else
                         <p class="text-muted mb-3">Informasi kontak resmi belum dipublikasikan.</p>
                     @endif
-                    <a class="btn btn-outline-success" href="{{ route('consultation.create') }}"><i class="bi bi-chat-left-text"></i> Konsultasi Informasi Hukum</a>
+                    <a class="btn btn-outline-primary" href="{{ route('consultation.create') }}"><i class="bi bi-chat-left-text"></i> Konsultasi Informasi Hukum</a>
                 </div>
             </div>
         </div>

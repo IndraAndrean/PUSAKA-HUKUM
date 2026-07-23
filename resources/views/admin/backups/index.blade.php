@@ -4,7 +4,7 @@
 @section('page_title', 'Backup dan Pemulihan Sistem')
 
 @section('page_actions')
-    <form method="post" action="{{ route('admin.backups.store') }}" onsubmit="return confirm('Buat backup database dan seluruh dokumen sekarang?')">
+    <form method="post" action="{{ route('admin.backups.store') }}" data-confirm="Sistem akan membuat backup database dan seluruh dokumen sekarang." data-confirm-title="Buat Backup Sistem" data-confirm-label="Ya, Buat Backup">
         @csrf
         <button class="btn btn-primary" type="submit">
             <i class="bi bi-database-add"></i> Buat Backup

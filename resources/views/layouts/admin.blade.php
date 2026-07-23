@@ -1,9 +1,13 @@
+@php
+    $appLogoUrl = $organizationProfile?->logo_url ?: asset('images/sipakem-logo.png');
+@endphp
 <!doctype html>
 <html lang="id">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>@yield('title', 'Dashboard Admin') - {{ $organizationProfile?->portal_name ?? 'PUSAKA HUKUM' }}</title>
+    <title>@yield('title', 'Dashboard Admin') - {{ $organizationProfile?->portal_name ?? 'SIPAKEM' }}</title>
+    <link rel="icon" type="image/png" href="{{ $appLogoUrl }}">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @stack('styles')
 </head>
@@ -18,12 +22,15 @@
     <div class="admin-main">
         <header class="admin-topbar">
             <div class="admin-topbar-left">
-                <button class="btn btn-outline-secondary btn-icon admin-mobile-menu-button" type="button" data-ui-toggle="offcanvas" data-ui-target="#adminNavigation" aria-controls="adminNavigation" title="Buka navigasi">
-                    <i class="bi bi-list fs-5"></i>
+                <button class="admin-nav-toggle-button admin-sidebar-toggle-button" type="button" data-ui-toggle="admin-sidebar" aria-pressed="false" title="Sembunyikan navigasi">
+                    <i data-lucide="menu"></i>
+                </button>
+                <button class="admin-nav-toggle-button admin-mobile-menu-button" type="button" data-ui-toggle="offcanvas" data-ui-target="#adminNavigation" aria-controls="adminNavigation" title="Buka navigasi">
+                    <i data-lucide="menu"></i>
                 </button>
                 <a class="admin-topbar-brand" href="{{ route('admin.dashboard') }}">
-                    <span class="admin-brand-mark">PH</span>
-                    <strong>{{ $organizationProfile?->portal_name ?? 'PUSAKA' }}</strong>
+                    <img class="brand-logo admin-topbar-logo" src="{{ $appLogoUrl }}" alt="Logo {{ $organizationProfile?->organization_name ?? 'SIPAKEM' }}">
+                    <strong>{{ $organizationProfile?->portal_name ?? 'SIPAKEM' }}</strong>
                 </a>
             </div>
 
@@ -57,20 +64,33 @@
                 <div class="admin-page-actions">@yield('page_actions')</div>
             </div>
 
-            @if(session('success'))
-                <div class="alert alert-success">{{ session('success') }}</div>
-            @endif
-            @if(session('error'))
-                <div class="alert alert-danger">{{ session('error') }}</div>
-            @endif
-            @if($errors->any())
-                <div class="alert alert-danger">
-                    <strong>Periksa kembali input.</strong>
-                    <ul class="mb-0 mt-2">
-                        @foreach($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
+            @if(session('success') || session('error') || $errors->any())
+                <div class="admin-toast-stack" aria-live="polite">
+                    @if(session('success'))
+                        <div class="admin-toast admin-toast-success" role="status">
+                            <i data-lucide="circle-check-big"></i>
+                            <div class="admin-toast-body">{{ session('success') }}</div>
+                        </div>
+                    @endif
+                    @if(session('error'))
+                        <div class="admin-toast admin-toast-danger" role="alert">
+                            <i data-lucide="triangle-alert"></i>
+                            <div class="admin-toast-body">{{ session('error') }}</div>
+                        </div>
+                    @endif
+                    @if($errors->any())
+                        <div class="admin-toast admin-toast-danger" role="alert">
+                            <i data-lucide="triangle-alert"></i>
+                            <div class="admin-toast-body">
+                                <strong>Periksa kembali input.</strong>
+                                <ul class="mb-0 mt-2">
+                                    @foreach($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        </div>
+                    @endif
                 </div>
             @endif
 
@@ -86,6 +106,22 @@
     </div>
     <div class="offcanvas-body p-3">
         @include('layouts.partials.admin-navigation', ['idPrefix' => 'mobile'])
+    </div>
+</div>
+
+<div class="modal admin-confirm-modal" id="adminConfirmModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog admin-confirm-dialog">
+        <div class="modal-content admin-confirm-content">
+            <div class="admin-confirm-icon" data-confirm-icon>
+                <i data-lucide="circle-check-big"></i>
+            </div>
+            <h2 class="admin-confirm-title" data-confirm-title>Konfirmasi Aksi</h2>
+            <p class="admin-confirm-text" data-confirm-text>Apakah Anda yakin ingin melanjutkan aksi ini?</p>
+            <div class="admin-confirm-actions">
+                <button class="btn btn-outline-secondary" type="button" data-ui-dismiss="modal">Batal</button>
+                <button class="btn btn-primary" type="button" data-confirm-approve>Ya, Lanjutkan</button>
+            </div>
+        </div>
     </div>
 </div>
 @stack('scripts')

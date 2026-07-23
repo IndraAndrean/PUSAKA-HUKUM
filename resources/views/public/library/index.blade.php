@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Perpustakaan Digital Hukum - PUSAKA HUKUM')
+@section('title', 'Perpustakaan Digital Hukum - SIPAKEM')
 
 @section('content')
 <section class="page-intro py-5">
@@ -14,7 +14,7 @@
             <div class="col-lg-8">
                 <div class="section-eyebrow mb-2">Referensi dan Kajian</div>
                 <h1 class="h2">Perpustakaan Digital Hukum</h1>
-                <p class="text-muted mb-0">Temukan buku, jurnal, naskah akademik, kajian, yurisprudensi, putusan, dan referensi hukum lainnya sesuai hak akses Anda.</p>
+                <p class="text-muted mb-0">Temukan buku, jurnal, kajian hukum, putusan, dan referensi hukum lainnya sesuai hak akses Anda.</p>
             </div>
             <div class="col-lg-4">
                 <div class="row g-2">
@@ -30,7 +30,7 @@
     <div class="container">
         <form method="get" class="search-toolbar mb-4">
             <div class="input-group flex-grow-1">
-                <span class="input-group-text bg-white"><i data-lucide="search"></i></span>
+                <span class="input-group-text"><i data-lucide="search"></i></span>
                 <input class="form-control" name="q" value="{{ request('q') }}" placeholder="Judul, jenis, kategori, penulis, ISBN, kata kunci">
             </div>
             @if(request('type'))<input type="hidden" name="type" value="{{ request('type') }}">@endif

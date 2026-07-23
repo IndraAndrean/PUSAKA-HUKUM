@@ -168,7 +168,7 @@
                             'documents_target' => 'Total dokumen',
                             'legislation_target' => 'Peraturan perundang-undangan',
                             'internal_documents_target' => 'Produk hukum internal',
-                            'legal_studies_target' => 'Kajian dan legal opinion',
+                            'legal_studies_target' => 'Kajian hukum',
                             'education_materials_target' => 'Materi penyuluhan',
                             'registered_users_target' => 'Pengguna terdaftar',
                             'accesses_target' => 'Jumlah akses',

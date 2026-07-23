@@ -50,7 +50,7 @@ return new class extends Migration
                     'code_prefix' => $type['code_prefix'],
                     'review_interval_months' => $type['review_interval_months'],
                     'collection' => 'perpustakaan',
-                    'description' => 'Koleksi Perpustakaan Digital Hukum PUSAKA HUKUM.',
+                    'description' => 'Koleksi Perpustakaan Digital Hukum SIPAKEM.',
                     'created_at' => $now,
                     'updated_at' => $now,
                 ],

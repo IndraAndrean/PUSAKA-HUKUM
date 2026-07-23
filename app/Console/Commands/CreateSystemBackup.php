@@ -10,7 +10,7 @@ class CreateSystemBackup extends Command
 {
     protected $signature = 'backups:create {--type=manual : Jenis backup: manual atau scheduled}';
 
-    protected $description = 'Membuat backup database dan dokumen private PUSAKA HUKUM';
+    protected $description = 'Membuat backup database dan dokumen private SIPAKEM';
 
     public function handle(BackupService $backupService): int
     {

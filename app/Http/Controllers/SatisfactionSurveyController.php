@@ -62,7 +62,7 @@ class SatisfactionSurveyController extends Controller
 
         return redirect()
             ->route('surveys.create')
-            ->with('success', 'Terima kasih. Penilaian Anda sudah tercatat untuk evaluasi PUSAKA HUKUM.');
+            ->with('success', 'Terima kasih. Penilaian Anda sudah tercatat untuk evaluasi SIPAKEM.');
     }
 
     private function respondentKey(Request $request): string

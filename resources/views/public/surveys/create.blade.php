@@ -11,8 +11,8 @@
             <span class="breadcrumb-item active">Survei Kepuasan</span>
         </nav>
         <div class="mb-4">
-            <span class="text-uppercase small fw-semibold text-success">Evaluasi Layanan</span>
-            <h1 class="h2 mt-2">Survei Kepuasan PUSAKA HUKUM</h1>
+            <span class="text-uppercase small fw-semibold text-primary">Evaluasi Layanan</span>
+            <h1 class="h2 mt-2">Survei Kepuasan SIPAKEM</h1>
             <p class="text-muted mb-0">Penilaian ini digunakan untuk mengukur kemudahan akses, kecepatan pencarian, kualitas isi, dan manfaat portal. Survei dapat diisi satu kali setiap bulan.</p>
         </div>
 
@@ -20,7 +20,7 @@
             <div class="item-card p-4 text-center">
                 <i class="bi bi-check-circle-fill text-success fs-1"></i>
                 <h2 class="h4 mt-3">Survei bulan ini sudah diisi</h2>
-                <p class="text-muted">Terima kasih telah membantu evaluasi dan pengembangan PUSAKA HUKUM.</p>
+                <p class="text-muted">Terima kasih telah membantu evaluasi dan pengembangan SIPAKEM.</p>
                 <a class="btn btn-pusaka" href="{{ route('home') }}"><i class="bi bi-house me-1"></i> Kembali ke Beranda</a>
             </div>
         @else

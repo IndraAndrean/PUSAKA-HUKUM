@@ -9,13 +9,12 @@
 
 @section('content')
 <div class="content-card p-3">
-    <form method="get" class="row g-2 mb-3">
-        <div class="col-md-10">
+    <form method="get" class="search-toolbar mb-3">
+        <div class="input-group flex-grow-1">
+            <span class="input-group-text"><i data-lucide="search"></i></span>
             <input class="form-control" name="q" value="{{ request('q') }}" placeholder="Cari judul atau kategori artikel">
         </div>
-        <div class="col-md-2 d-grid">
-            <button class="btn btn-outline-secondary" type="submit"><i class="bi bi-search"></i> Cari</button>
-        </div>
+        <button class="btn btn-outline-secondary" type="submit"><i data-lucide="search"></i> Cari</button>
     </form>
     <div class="table-responsive">
         <table class="table align-middle">
@@ -49,7 +48,7 @@
                             <a class="btn btn-sm btn-outline-secondary" href="{{ route('articles.show', $article->slug) }}" target="_blank" title="Lihat"><i class="bi bi-eye"></i></a>
                         @endif
                         <a class="btn btn-sm btn-outline-primary" href="{{ route('admin.articles.edit', $article) }}" title="Edit"><i class="bi bi-pencil"></i></a>
-                        <form class="d-inline" method="post" action="{{ route('admin.articles.destroy', $article) }}" onsubmit="return confirm('Hapus artikel ini?')">
+                        <form class="d-inline" method="post" action="{{ route('admin.articles.destroy', $article) }}" data-confirm="Artikel ini akan dihapus dari sistem. Tindakan ini tidak dapat dibatalkan." data-confirm-title="Hapus Artikel" data-confirm-label="Ya, Hapus" data-confirm-variant="danger">
                             @csrf
                             @method('delete')
                             <button class="btn btn-sm btn-outline-danger" type="submit" title="Hapus"><i class="bi bi-trash"></i></button>

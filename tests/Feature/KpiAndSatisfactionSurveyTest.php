@@ -17,7 +17,7 @@ class KpiAndSatisfactionSurveyTest extends TestCase
     {
         $this->get(route('surveys.create'))
             ->assertOk()
-            ->assertSee('Survei Kepuasan PUSAKA HUKUM');
+            ->assertSee('Survei Kepuasan SIPAKEM');
 
         $this->post(route('surveys.store'), $this->validSurvey())
             ->assertRedirect(route('surveys.create'))

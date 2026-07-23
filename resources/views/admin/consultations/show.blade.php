@@ -41,7 +41,7 @@
             @endif
             <button class="btn btn-primary" type="submit"><i class="bi bi-save"></i> Simpan Tanggapan</button>
         </form>
-        <form class="mt-3" method="post" action="{{ route('admin.consultations.destroy', $consultation) }}" onsubmit="return confirm('Hapus konsultasi ini?')">
+        <form class="mt-3" method="post" action="{{ route('admin.consultations.destroy', $consultation) }}" data-confirm="Konsultasi ini akan dihapus dari sistem. Tindakan ini tidak dapat dibatalkan." data-confirm-title="Hapus Konsultasi" data-confirm-label="Ya, Hapus" data-confirm-variant="danger">
             @csrf
             @method('delete')
             <button class="btn btn-outline-danger" type="submit"><i class="bi bi-trash"></i> Hapus Konsultasi</button>
